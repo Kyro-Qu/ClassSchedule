@@ -112,6 +112,7 @@
       font-size: clamp(32px, 4vw, 56px);
       line-height: 1.08;
       letter-spacing: 0.02em;
+      text-align: center;
     }
 
     .hero p {
@@ -210,20 +211,6 @@
       justify-content: space-between;
     }
 
-    .data-actions {
-      display: inline-flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      align-items: center;
-    }
-
-    .sync-note {
-      margin: 0;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.5;
-    }
-
     .week-nav {
       display: inline-flex;
       gap: 8px;
@@ -315,43 +302,12 @@
       border-radius: 999px;
     }
 
-    .summary-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .summary-card {
-      border-radius: 20px;
-      padding: 16px 18px;
-      background: var(--panel-strong);
-      border: 1px solid rgba(20, 33, 46, 0.08);
-    }
-
-    .summary-card .label {
-      color: var(--muted);
-      font-size: 12px;
-      margin-bottom: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    .summary-card .value {
-      font-size: 26px;
-      font-weight: 800;
-      line-height: 1.1;
-      margin-bottom: 6px;
-    }
-
-    .summary-card .hint {
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.6;
-    }
 
     .timetable-shell {
       overflow-x: auto;
       padding-bottom: 4px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-gutter: stable both-edges;
     }
 
     .timetable {
@@ -394,6 +350,11 @@
       line-height: 1.4;
     }
 
+    .grid-head.today-col {
+      border-color: rgba(30, 111, 140, 0.34);
+      background: linear-gradient(180deg, rgba(30, 111, 140, 0.18), rgba(255, 255, 255, 0.78));
+    }
+
     .grid-head.corner {
       align-items: flex-start;
       background: linear-gradient(135deg, rgba(30, 111, 140, 0.12), rgba(255, 255, 255, 0.74));
@@ -434,6 +395,11 @@
       overflow: hidden;
     }
 
+    .grid-cell.today-col {
+      border-color: rgba(30, 111, 140, 0.28);
+      background: linear-gradient(180deg, rgba(30, 111, 140, 0.08), rgba(255, 255, 255, 0.74));
+    }
+
     .grid-cell.empty {
       background: linear-gradient(180deg, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0.40));
     }
@@ -450,28 +416,10 @@
       font-size: 13px;
       line-height: 1.6;
       text-align: left;
-      outline: none;
-      cursor: text;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       letter-spacing: 0.02em;
-      font: inherit;
-      resize: vertical;
-      overflow: auto;
-      appearance: none;
-      -webkit-appearance: none;
-    }
-
-    .grid-cell.empty textarea.empty-note {
-      width: 100%;
-    }
-
-    .grid-cell.empty .empty-note::placeholder {
-      color: rgba(97, 113, 132, 0.72);
-    }
-
-    .grid-cell.empty .empty-note:focus {
-      border-color: rgba(30, 111, 140, 0.42);
-      box-shadow: 0 0 0 3px rgba(30, 111, 140, 0.10);
-      outline: none;
     }
 
     .course-card {
@@ -528,10 +476,116 @@
       line-height: 1.8;
     }
 
-    @media (max-width: 1100px) {
-      .hero-meta,
-      .summary-grid {
+    @media (min-width: 1440px) {
+      .page {
+        width: min(1500px, calc(100vw - 56px));
+      }
+
+      .hero,
+      .panel {
+        padding: 30px;
+      }
+
+      .timetable {
+        min-width: 1240px;
+        grid-template-columns: 110px repeat(7, minmax(150px, 1fr));
+      }
+    }
+
+    @media (min-width: 960px) and (max-width: 1280px) and (orientation: landscape) {
+      .page {
+        width: min(100vw - 20px, 1320px);
+        margin: 14px auto 24px;
+      }
+
+      .hero,
+      .panel {
+        padding: 20px;
+      }
+
+      .hero h1 {
+        font-size: clamp(30px, 3.3vw, 44px);
+      }
+
+      .hero-meta {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .panel-head {
+        gap: 10px 12px;
+      }
+
+      .week-btn {
+        min-width: 88px;
+        padding: 9px 10px;
+      }
+
+      .timetable {
+        min-width: 980px;
+        grid-template-columns: 82px repeat(7, minmax(116px, 1fr));
+        gap: 8px;
+      }
+
+      .grid-head,
+      .grid-period,
+      .grid-cell {
+        border-radius: 14px;
+      }
+
+      .grid-head {
+        min-height: 66px;
+        padding: 10px;
+      }
+
+      .grid-head .day-name {
+        font-size: 14px;
+      }
+
+      .grid-cell,
+      .grid-period {
+        min-height: 110px;
+      }
+
+      .course-card {
+        padding: 10px;
+      }
+
+      .course-card .title {
+        font-size: 14px;
+      }
+    }
+
+    @media (max-width: 1100px) {
+      .hero-meta {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .timetable {
+        min-width: 980px;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .page {
+        width: min(100vw - 14px, 1400px);
+      }
+
+      .panel-title h2 {
+        font-size: 20px;
+      }
+
+      .status-pill {
+        font-size: 13px;
+        padding: 9px 12px;
+      }
+
+      .selector-label {
+        font-size: 13px;
+      }
+
+      .timetable {
+        min-width: 920px;
+        grid-template-columns: 78px repeat(7, minmax(112px, 1fr));
       }
     }
 
@@ -547,9 +601,22 @@
         border-radius: 22px;
       }
 
-      .hero-meta,
-      .summary-grid {
+      .hero h1 {
+        font-size: clamp(26px, 8vw, 34px);
+        line-height: 1.12;
+      }
+
+      .hero p {
+        font-size: 14px;
+        line-height: 1.6;
+      }
+
+      .hero-meta {
         grid-template-columns: 1fr;
+      }
+
+      .meta-card {
+        padding: 14px;
       }
 
       .toolbar {
@@ -565,6 +632,104 @@
       .week-btn {
         flex: 1 0 auto;
       }
+
+      .week-btn {
+        min-width: 82px;
+        padding: 8px 8px;
+      }
+
+      .selector-track {
+        gap: 8px;
+        padding-bottom: 6px;
+      }
+
+      .timetable {
+        min-width: 860px;
+        grid-template-columns: 72px repeat(7, minmax(104px, 1fr));
+        gap: 7px;
+      }
+
+      .grid-head,
+      .grid-period,
+      .grid-cell {
+        border-radius: 12px;
+      }
+
+      .grid-head {
+        min-height: 58px;
+        padding: 8px;
+      }
+
+      .grid-head .day-name {
+        font-size: 13px;
+      }
+
+      .grid-head .day-date {
+        font-size: 11px;
+      }
+
+      .grid-period,
+      .grid-cell {
+        min-height: 100px;
+        padding: 8px;
+      }
+
+      .grid-period .period-label {
+        font-size: 13px;
+      }
+
+      .grid-period .period-meta {
+        font-size: 11px;
+      }
+
+      .course-card {
+        padding: 9px;
+        gap: 6px;
+      }
+
+      .course-card .title {
+        font-size: 13px;
+      }
+
+      .course-card .meta,
+      .tag {
+        font-size: 11px;
+      }
+
+      .grid-cell.empty .empty-note {
+        min-height: 84px;
+        padding: 10px;
+        font-size: 12px;
+      }
+    }
+
+    @media (max-width: 430px) {
+      .page {
+        width: calc(100vw - 10px);
+      }
+
+      .hero,
+      .panel {
+        padding: 14px;
+        border-radius: 18px;
+      }
+
+      .eyebrow {
+        font-size: 12px;
+        padding: 7px 12px;
+      }
+
+      .hero h1 {
+        font-size: clamp(24px, 8.4vw, 30px);
+      }
+
+      .week-btn {
+        min-width: 78px;
+      }
+
+      .timetable {
+        min-width: 820px;
+      }
     }
   </style>
 </head>
@@ -573,25 +738,6 @@
     <header class="hero">
       <div class="eyebrow">2025-2026 第2学期</div>
       <h1>2025电子信息2班 课表</h1>
-      <p>第 1 周从 2026-03-09 开始。</p>
-      <div class="hero-meta">
-        <div class="meta-card">
-          <span>班级</span>
-          <strong>电子信息工程(专升本)2025(2)班</strong>
-        </div>
-        <div class="meta-card">
-          <span>开课日期</span>
-          <strong>2026-03-09</strong>
-        </div>
-        <div class="meta-card">
-          <span>总周数</span>
-          <strong>25 周</strong>
-        </div>
-        <div class="meta-card">
-          <span>当前周</span>
-          <strong id="current-week-text">第 1 周</strong>
-        </div>
-      </div>
     </header>
 
     <section class="panel controls">
@@ -603,17 +749,6 @@
         <div class="status-pill" id="week-range-pill">2026-03-09 至 2026-03-15</div>
       </div>
 
-      <div class="toolbar">
-        <div class="data-actions">
-          <button class="nav-btn" id="export-tasks" type="button">导出自定义任务</button>
-          <button class="nav-btn" id="import-tasks" type="button">导入自定义任务</button>
-          <button class="nav-btn" id="clear-tasks" type="button">清空自定义任务</button>
-          <input id="import-file" type="file" accept="application/json,.json" hidden />
-        </div>
-        <div class="status-pill" id="week-course-count">本周 0 门课程</div>
-      </div>
-      <p class="sync-note" id="sync-note">自定义任务保存在浏览器本地，可通过导入/导出在多设备同步。</p>
-
       <div class="selector-wrap">
         <div class="selector-label">
           <span>学期周历</span>
@@ -622,7 +757,6 @@
         <div class="selector-track" id="week-selector"></div>
       </div>
 
-      <div class="summary-grid" id="summary-grid"></div>
     </section>
 
     <section class="panel timetable-panel">
@@ -636,7 +770,6 @@
       <div class="timetable-shell">
         <div class="timetable" id="timetable"></div>
       </div>
-      <div class="footer-note">注：课表来源中的顺序为“课程 <> 周次 <> 校区 <> 地点 <> 教师 <> 教学班人数 <> 总学时”。本页面将“第 1 周”视为 2026-03-09 开始的一周。</div>
     </section>
   </div>
 
@@ -931,26 +1064,19 @@
     ];
 
     const timetableRoot = document.getElementById('timetable');
-    const summaryGrid = document.getElementById('summary-grid');
     const selector = document.getElementById('week-selector');
     const weekHint = document.getElementById('week-hint');
-    const currentWeekText = document.getElementById('current-week-text');
     const weekRangePill = document.getElementById('week-range-pill');
-    const weekCourseCount = document.getElementById('week-course-count');
     const activeWeekPill = document.getElementById('active-week-pill');
-    const noteStoragePrefix = 'timetable-note-v1';
-    const tasksStorageKey = 'class-schedule-custom-tasks-v1';
-    const exportTasksBtn = document.getElementById('export-tasks');
-    const importTasksBtn = document.getElementById('import-tasks');
-    const clearTasksBtn = document.getElementById('clear-tasks');
-    const importFileInput = document.getElementById('import-file');
-    const syncNote = document.getElementById('sync-note');
-
-    let customTasks = [];
 
     const today = new Date();
     const todayWeek = getCurrentWeek(today);
     let selectedWeek = todayWeek;
+
+    function getWeekdayIndex(date) {
+      const day = date.getDay();
+      return day === 0 ? 6 : day - 1;
+    }
 
     function clamp(value, min, max) {
       return Math.max(min, Math.min(max, value));
@@ -998,212 +1124,6 @@
       return tag;
     }
 
-    function getNoteStorageKey(week, dayIndex, periodIndex) {
-      return `${noteStoragePrefix}-${week}-${dayIndex}-${periodIndex}`;
-    }
-
-    function getTaskCellKey(task) {
-      return `${task.week}-${task.day}-${task.period}`;
-    }
-
-    function getIsoNow() {
-      return new Date().toISOString();
-    }
-
-    function createTaskId() {
-      if (typeof crypto !== 'undefined' && crypto.randomUUID) {
-        return crypto.randomUUID();
-      }
-      return `task-${Date.now()}-${Math.random().toString(16).slice(2, 10)}`;
-    }
-
-    function normalizeTask(task) {
-      return {
-        id: task.id || createTaskId(),
-        week: Number(task.week),
-        day: Number(task.day),
-        period: Number(task.period),
-        text: String(task.text || '').trim(),
-        updatedAt: task.updatedAt || getIsoNow(),
-      };
-    }
-
-    function isValidTask(task) {
-      return (
-        Number.isInteger(task.week) && task.week >= 1 && task.week <= TOTAL_WEEKS &&
-        Number.isInteger(task.day) && task.day >= 0 && task.day <= 6 &&
-        Number.isInteger(task.period) && task.period >= 0 && task.period <= 4 &&
-        typeof task.text === 'string' && task.text.trim().length > 0
-      );
-    }
-
-    function normalizeTaskList(taskList) {
-      const cellMap = new Map();
-      taskList.forEach((rawTask) => {
-        const task = normalizeTask(rawTask);
-        if (!isValidTask(task)) {
-          return;
-        }
-        const cellKey = getTaskCellKey(task);
-        const current = cellMap.get(cellKey);
-        const currentTime = current ? Date.parse(current.updatedAt) || 0 : 0;
-        const nextTime = Date.parse(task.updatedAt) || 0;
-        if (!current || nextTime >= currentTime) {
-          cellMap.set(cellKey, task);
-        }
-      });
-      return Array.from(cellMap.values());
-    }
-
-    function loadCustomTasks() {
-      const raw = localStorage.getItem(tasksStorageKey);
-      if (!raw) {
-        return [];
-      }
-      try {
-        const parsed = JSON.parse(raw);
-        if (!Array.isArray(parsed)) {
-          return [];
-        }
-        return normalizeTaskList(parsed);
-      } catch (error) {
-        return [];
-      }
-    }
-
-    function saveCustomTasks() {
-      localStorage.setItem(tasksStorageKey, JSON.stringify(customTasks));
-    }
-
-    function setSyncNote(message) {
-      syncNote.textContent = message;
-    }
-
-    function migrateLegacyNotes() {
-      const migrated = [];
-      for (let week = 1; week <= TOTAL_WEEKS; week += 1) {
-        for (let day = 0; day <= 6; day += 1) {
-          for (let period = 0; period <= 4; period += 1) {
-            const legacyKey = getNoteStorageKey(week, day, period);
-            const legacyText = (localStorage.getItem(legacyKey) || '').trim();
-            if (!legacyText) {
-              continue;
-            }
-            migrated.push({
-              id: createTaskId(),
-              week,
-              day,
-              period,
-              text: legacyText,
-              updatedAt: getIsoNow(),
-            });
-            localStorage.removeItem(legacyKey);
-          }
-        }
-      }
-      return migrated;
-    }
-
-    function getTaskForCell(week, dayIndex, periodIndex) {
-      return customTasks.find((task) => task.week === week && task.day === dayIndex && task.period === periodIndex) || null;
-    }
-
-    function upsertTask(week, dayIndex, periodIndex, text) {
-      const value = text.trim();
-      const existingIndex = customTasks.findIndex(
-        (task) => task.week === week && task.day === dayIndex && task.period === periodIndex
-      );
-
-      if (!value) {
-        if (existingIndex >= 0) {
-          customTasks.splice(existingIndex, 1);
-          saveCustomTasks();
-        }
-        return;
-      }
-
-      if (existingIndex >= 0) {
-        customTasks[existingIndex] = {
-          ...customTasks[existingIndex],
-          text: value,
-          updatedAt: getIsoNow(),
-        };
-      } else {
-        customTasks.push({
-          id: createTaskId(),
-          week,
-          day: dayIndex,
-          period: periodIndex,
-          text: value,
-          updatedAt: getIsoNow(),
-        });
-      }
-      customTasks = normalizeTaskList(customTasks);
-      saveCustomTasks();
-    }
-
-    function getSavedNote(week, dayIndex, periodIndex) {
-      const task = getTaskForCell(week, dayIndex, periodIndex);
-      return task ? task.text : '';
-    }
-
-    function saveNote(week, dayIndex, periodIndex, text) {
-      upsertTask(week, dayIndex, periodIndex, text);
-    }
-
-    function exportCustomTasks() {
-      const payload = {
-        version: 1,
-        exportedAt: getIsoNow(),
-        tasks: customTasks,
-      };
-      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const anchor = document.createElement('a');
-      const dateTag = new Date().toISOString().slice(0, 10);
-      anchor.href = url;
-      anchor.download = `custom-tasks-${dateTag}.json`;
-      document.body.appendChild(anchor);
-      anchor.click();
-      document.body.removeChild(anchor);
-      URL.revokeObjectURL(url);
-      setSyncNote('已导出自定义任务 JSON 文件。');
-    }
-
-    async function importCustomTasks(file) {
-      const text = await file.text();
-      const parsed = JSON.parse(text);
-      const incoming = Array.isArray(parsed) ? parsed : parsed.tasks;
-      if (!Array.isArray(incoming)) {
-        throw new Error('导入文件格式不正确');
-      }
-      customTasks = normalizeTaskList([...customTasks, ...incoming]);
-      saveCustomTasks();
-      renderTimetable();
-      setSyncNote(`导入成功，共 ${customTasks.length} 条自定义任务。`);
-    }
-
-    function clearCustomTasks() {
-      const ok = window.confirm('确定清空所有自定义任务吗？此操作仅影响当前浏览器本地数据。');
-      if (!ok) {
-        return;
-      }
-      customTasks = [];
-      saveCustomTasks();
-      renderTimetable();
-      setSyncNote('已清空本地自定义任务。');
-    }
-
-    function resizeNote(noteElement) {
-      noteElement.style.height = 'auto';
-      noteElement.style.height = `${Math.max(100, noteElement.scrollHeight)}px`;
-    }
-
-    function syncTextareaNote(noteElement, week, dayIndex, periodIndex) {
-      saveNote(week, dayIndex, periodIndex, noteElement.value);
-      resizeNote(noteElement);
-    }
-
     function createCourseCard(course) {
       const card = document.createElement('article');
       card.className = 'course-card';
@@ -1243,37 +1163,10 @@
       }
     }
 
-    function renderSummary() {
-      const activeCourses = courses.filter((course) => isCourseActive(course, selectedWeek));
-
-      const items = [
-        {
-          label: '本周课程',
-          value: `${activeCourses.length} 门`,
-          hint: '当前周进入课表的固定课程数量',
-        },
-        {
-          label: '日期范围',
-          value: getWeekRange(selectedWeek),
-          hint: '周一到周日的完整时间段',
-        },
-      ];
-
-      summaryGrid.innerHTML = '';
-      items.forEach((item) => {
-        const card = document.createElement('div');
-        card.className = 'summary-card';
-        card.innerHTML = `
-          <div class="label">${item.label}</div>
-          <div class="value">${item.value}</div>
-          <div class="hint">${item.hint}</div>
-        `;
-        summaryGrid.appendChild(card);
-      });
-    }
-
     function renderTimetable() {
       timetableRoot.innerHTML = '';
+      const isCurrentCalendarWeek = selectedWeek === getCurrentWeek(new Date());
+      const todayDayIndex = getWeekdayIndex(new Date());
 
       const corner = document.createElement('div');
       corner.className = 'grid-head corner';
@@ -1283,6 +1176,9 @@
       weekdays.forEach((day, dayIndex) => {
         const header = document.createElement('div');
         header.className = 'grid-head';
+        if (isCurrentCalendarWeek && dayIndex === todayDayIndex) {
+          header.classList.add('today-col');
+        }
         const date = addDays(TERM_START, (selectedWeek - 1) * 7 + dayIndex);
         header.innerHTML = `<div class="day-name">${day.name}</div><div class="day-date">${formatDate(date)}</div>`;
         timetableRoot.appendChild(header);
@@ -1297,27 +1193,18 @@
         weekdays.forEach((day, dayIndex) => {
           const cell = document.createElement('div');
           cell.className = 'grid-cell';
+          if (isCurrentCalendarWeek && dayIndex === todayDayIndex) {
+            cell.classList.add('today-col');
+          }
           const items = courses
             .filter((course) => course.day === dayIndex && course.period === periodIndex && isCourseActive(course, selectedWeek))
             .sort((left, right) => left.title.localeCompare(right.title, 'zh-CN'));
 
           if (items.length === 0) {
             cell.classList.add('empty');
-            const empty = document.createElement('textarea');
+            const empty = document.createElement('p');
             empty.className = 'empty-note';
-            empty.spellcheck = false;
-            empty.dir = 'ltr';
-            empty.rows = 4;
-            empty.placeholder = '点击填写内容';
-            const savedText = getSavedNote(selectedWeek, dayIndex, periodIndex);
-            if (savedText) {
-              empty.value = savedText;
-            } else {
-              empty.value = '';
-            }
-            empty.addEventListener('input', () => syncTextareaNote(empty, selectedWeek, dayIndex, periodIndex));
-            empty.addEventListener('blur', () => syncTextareaNote(empty, selectedWeek, dayIndex, periodIndex));
-            resizeNote(empty);
+            empty.textContent = '无课程安排';
             cell.appendChild(empty);
           } else {
             const list = document.createElement('div');
@@ -1334,9 +1221,7 @@
     function updateControls() {
       const weekRange = getWeekRange(selectedWeek);
       weekHint.textContent = `第 ${selectedWeek} 周 · ${weekRange}`;
-      currentWeekText.textContent = `第 ${selectedWeek} 周`;
       weekRangePill.textContent = `第 ${selectedWeek} 周 · ${weekRange}`;
-      weekCourseCount.textContent = `本周 ${courses.filter((course) => isCourseActive(course, selectedWeek)).length} 门课程`;
       activeWeekPill.textContent = `第 ${selectedWeek} 周`;
 
       const weekButtons = selector.querySelectorAll('.week-btn');
@@ -1349,7 +1234,6 @@
     function setSelectedWeek(week) {
       selectedWeek = clamp(week, 1, TOTAL_WEEKS);
       updateControls();
-      renderSummary();
       renderTimetable();
       selector.querySelector(`.week-btn[data-week="${selectedWeek}"]`)?.scrollIntoView({
         behavior: 'smooth',
@@ -1363,31 +1247,6 @@
       if (currentWeek !== selectedWeek) {
         setSelectedWeek(currentWeek);
       }
-    }
-
-    exportTasksBtn.addEventListener('click', exportCustomTasks);
-    importTasksBtn.addEventListener('click', () => importFileInput.click());
-    importFileInput.addEventListener('change', async (event) => {
-      const file = event.target.files && event.target.files[0];
-      if (!file) {
-        return;
-      }
-      try {
-        await importCustomTasks(file);
-      } catch (error) {
-        setSyncNote('导入失败：请确认 JSON 文件格式正确。');
-      } finally {
-        importFileInput.value = '';
-      }
-    });
-    clearTasksBtn.addEventListener('click', clearCustomTasks);
-
-    customTasks = loadCustomTasks();
-    const migratedLegacyTasks = migrateLegacyNotes();
-    if (migratedLegacyTasks.length > 0) {
-      customTasks = normalizeTaskList([...customTasks, ...migratedLegacyTasks]);
-      saveCustomTasks();
-      setSyncNote(`已迁移旧版本地备注 ${migratedLegacyTasks.length} 条。`);
     }
 
     renderSelector();
