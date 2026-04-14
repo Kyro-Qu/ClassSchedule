@@ -210,6 +210,20 @@
       justify-content: space-between;
     }
 
+    .data-actions {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .sync-note {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
     .week-nav {
       display: inline-flex;
       gap: 8px;
@@ -590,12 +604,15 @@
       </div>
 
       <div class="toolbar">
-        <div class="week-nav">
-          <button class="nav-btn" id="prev-week" type="button">上一周</button>
-          <button class="nav-btn" id="next-week" type="button">下一周</button>
+        <div class="data-actions">
+          <button class="nav-btn" id="export-tasks" type="button">导出自定义任务</button>
+          <button class="nav-btn" id="import-tasks" type="button">导入自定义任务</button>
+          <button class="nav-btn" id="clear-tasks" type="button">清空自定义任务</button>
+          <input id="import-file" type="file" accept="application/json,.json" hidden />
         </div>
         <div class="status-pill" id="week-course-count">本周 0 门课程</div>
       </div>
+      <p class="sync-note" id="sync-note">自定义任务保存在浏览器本地，可通过导入/导出在多设备同步。</p>
 
       <div class="selector-wrap">
         <div class="selector-label">
@@ -921,9 +938,15 @@
     const weekRangePill = document.getElementById('week-range-pill');
     const weekCourseCount = document.getElementById('week-course-count');
     const activeWeekPill = document.getElementById('active-week-pill');
-    const prevWeekBtn = document.getElementById('prev-week');
-    const nextWeekBtn = document.getElementById('next-week');
     const noteStoragePrefix = 'timetable-note-v1';
+    const tasksStorageKey = 'class-schedule-custom-tasks-v1';
+    const exportTasksBtn = document.getElementById('export-tasks');
+    const importTasksBtn = document.getElementById('import-tasks');
+    const clearTasksBtn = document.getElementById('clear-tasks');
+    const importFileInput = document.getElementById('import-file');
+    const syncNote = document.getElementById('sync-note');
+
+    let customTasks = [];
 
     const today = new Date();
     const todayWeek = getCurrentWeek(today);
@@ -979,18 +1002,196 @@
       return `${noteStoragePrefix}-${week}-${dayIndex}-${periodIndex}`;
     }
 
+    function getTaskCellKey(task) {
+      return `${task.week}-${task.day}-${task.period}`;
+    }
+
+    function getIsoNow() {
+      return new Date().toISOString();
+    }
+
+    function createTaskId() {
+      if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+        return crypto.randomUUID();
+      }
+      return `task-${Date.now()}-${Math.random().toString(16).slice(2, 10)}`;
+    }
+
+    function normalizeTask(task) {
+      return {
+        id: task.id || createTaskId(),
+        week: Number(task.week),
+        day: Number(task.day),
+        period: Number(task.period),
+        text: String(task.text || '').trim(),
+        updatedAt: task.updatedAt || getIsoNow(),
+      };
+    }
+
+    function isValidTask(task) {
+      return (
+        Number.isInteger(task.week) && task.week >= 1 && task.week <= TOTAL_WEEKS &&
+        Number.isInteger(task.day) && task.day >= 0 && task.day <= 6 &&
+        Number.isInteger(task.period) && task.period >= 0 && task.period <= 4 &&
+        typeof task.text === 'string' && task.text.trim().length > 0
+      );
+    }
+
+    function normalizeTaskList(taskList) {
+      const cellMap = new Map();
+      taskList.forEach((rawTask) => {
+        const task = normalizeTask(rawTask);
+        if (!isValidTask(task)) {
+          return;
+        }
+        const cellKey = getTaskCellKey(task);
+        const current = cellMap.get(cellKey);
+        const currentTime = current ? Date.parse(current.updatedAt) || 0 : 0;
+        const nextTime = Date.parse(task.updatedAt) || 0;
+        if (!current || nextTime >= currentTime) {
+          cellMap.set(cellKey, task);
+        }
+      });
+      return Array.from(cellMap.values());
+    }
+
+    function loadCustomTasks() {
+      const raw = localStorage.getItem(tasksStorageKey);
+      if (!raw) {
+        return [];
+      }
+      try {
+        const parsed = JSON.parse(raw);
+        if (!Array.isArray(parsed)) {
+          return [];
+        }
+        return normalizeTaskList(parsed);
+      } catch (error) {
+        return [];
+      }
+    }
+
+    function saveCustomTasks() {
+      localStorage.setItem(tasksStorageKey, JSON.stringify(customTasks));
+    }
+
+    function setSyncNote(message) {
+      syncNote.textContent = message;
+    }
+
+    function migrateLegacyNotes() {
+      const migrated = [];
+      for (let week = 1; week <= TOTAL_WEEKS; week += 1) {
+        for (let day = 0; day <= 6; day += 1) {
+          for (let period = 0; period <= 4; period += 1) {
+            const legacyKey = getNoteStorageKey(week, day, period);
+            const legacyText = (localStorage.getItem(legacyKey) || '').trim();
+            if (!legacyText) {
+              continue;
+            }
+            migrated.push({
+              id: createTaskId(),
+              week,
+              day,
+              period,
+              text: legacyText,
+              updatedAt: getIsoNow(),
+            });
+            localStorage.removeItem(legacyKey);
+          }
+        }
+      }
+      return migrated;
+    }
+
+    function getTaskForCell(week, dayIndex, periodIndex) {
+      return customTasks.find((task) => task.week === week && task.day === dayIndex && task.period === periodIndex) || null;
+    }
+
+    function upsertTask(week, dayIndex, periodIndex, text) {
+      const value = text.trim();
+      const existingIndex = customTasks.findIndex(
+        (task) => task.week === week && task.day === dayIndex && task.period === periodIndex
+      );
+
+      if (!value) {
+        if (existingIndex >= 0) {
+          customTasks.splice(existingIndex, 1);
+          saveCustomTasks();
+        }
+        return;
+      }
+
+      if (existingIndex >= 0) {
+        customTasks[existingIndex] = {
+          ...customTasks[existingIndex],
+          text: value,
+          updatedAt: getIsoNow(),
+        };
+      } else {
+        customTasks.push({
+          id: createTaskId(),
+          week,
+          day: dayIndex,
+          period: periodIndex,
+          text: value,
+          updatedAt: getIsoNow(),
+        });
+      }
+      customTasks = normalizeTaskList(customTasks);
+      saveCustomTasks();
+    }
+
     function getSavedNote(week, dayIndex, periodIndex) {
-      return localStorage.getItem(getNoteStorageKey(week, dayIndex, periodIndex)) || '';
+      const task = getTaskForCell(week, dayIndex, periodIndex);
+      return task ? task.text : '';
     }
 
     function saveNote(week, dayIndex, periodIndex, text) {
-      const key = getNoteStorageKey(week, dayIndex, periodIndex);
-      const value = text.trim();
-      if (value) {
-        localStorage.setItem(key, value);
-      } else {
-        localStorage.removeItem(key);
+      upsertTask(week, dayIndex, periodIndex, text);
+    }
+
+    function exportCustomTasks() {
+      const payload = {
+        version: 1,
+        exportedAt: getIsoNow(),
+        tasks: customTasks,
+      };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      const dateTag = new Date().toISOString().slice(0, 10);
+      anchor.href = url;
+      anchor.download = `custom-tasks-${dateTag}.json`;
+      document.body.appendChild(anchor);
+      anchor.click();
+      document.body.removeChild(anchor);
+      URL.revokeObjectURL(url);
+      setSyncNote('已导出自定义任务 JSON 文件。');
+    }
+
+    async function importCustomTasks(file) {
+      const text = await file.text();
+      const parsed = JSON.parse(text);
+      const incoming = Array.isArray(parsed) ? parsed : parsed.tasks;
+      if (!Array.isArray(incoming)) {
+        throw new Error('导入文件格式不正确');
       }
+      customTasks = normalizeTaskList([...customTasks, ...incoming]);
+      saveCustomTasks();
+      renderTimetable();
+      setSyncNote(`导入成功，共 ${customTasks.length} 条自定义任务。`);
+    }
+
+    function clearCustomTasks() {
+      const ok = window.confirm('确定清空所有自定义任务吗？此操作仅影响当前浏览器本地数据。');
+      if (!ok) {
+        return;
+      }
+      customTasks = [];
+      saveCustomTasks();
+      renderTimetable();
+      setSyncNote('已清空本地自定义任务。');
     }
 
     function resizeNote(noteElement) {
@@ -1164,8 +1365,30 @@
       }
     }
 
-    prevWeekBtn.addEventListener('click', () => setSelectedWeek(selectedWeek - 1));
-    nextWeekBtn.addEventListener('click', () => setSelectedWeek(selectedWeek + 1));
+    exportTasksBtn.addEventListener('click', exportCustomTasks);
+    importTasksBtn.addEventListener('click', () => importFileInput.click());
+    importFileInput.addEventListener('change', async (event) => {
+      const file = event.target.files && event.target.files[0];
+      if (!file) {
+        return;
+      }
+      try {
+        await importCustomTasks(file);
+      } catch (error) {
+        setSyncNote('导入失败：请确认 JSON 文件格式正确。');
+      } finally {
+        importFileInput.value = '';
+      }
+    });
+    clearTasksBtn.addEventListener('click', clearCustomTasks);
+
+    customTasks = loadCustomTasks();
+    const migratedLegacyTasks = migrateLegacyNotes();
+    if (migratedLegacyTasks.length > 0) {
+      customTasks = normalizeTaskList([...customTasks, ...migratedLegacyTasks]);
+      saveCustomTasks();
+      setSyncNote(`已迁移旧版本地备注 ${migratedLegacyTasks.length} 条。`);
+    }
 
     renderSelector();
     setSelectedWeek(selectedWeek);
