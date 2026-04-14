@@ -167,6 +167,27 @@
       margin-bottom: 16px;
     }
 
+    .timetable-head {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      min-height: 48px;
+    }
+
+    .timetable-center-title {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.2;
+      text-align: center;
+      font-weight: 800;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
     .panel-title {
       display: flex;
       flex-direction: column;
@@ -198,108 +219,43 @@
       white-space: nowrap;
     }
 
-    .controls {
-      display: grid;
-      gap: 18px;
-    }
-
-    .toolbar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .week-nav {
-      display: inline-flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    .nav-btn,
-    .week-btn {
+    .week-picker {
       appearance: none;
       border: 1px solid rgba(20, 33, 46, 0.12);
       background: rgba(255, 255, 255, 0.72);
       color: var(--text);
       border-radius: 999px;
-      padding: 11px 14px;
+      padding: 10px 34px 10px 14px;
       font: inherit;
       cursor: pointer;
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1.2;
       transition: transform 160ms ease, background 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+      background-image:
+        linear-gradient(45deg, transparent 50%, rgba(20, 33, 46, 0.65) 50%),
+        linear-gradient(135deg, rgba(20, 33, 46, 0.65) 50%, transparent 50%);
+      background-position:
+        calc(100% - 16px) calc(50% - 2px),
+        calc(100% - 10px) calc(50% - 2px);
+      background-size: 6px 6px, 6px 6px;
+      background-repeat: no-repeat;
     }
 
-    .nav-btn:hover,
-    .week-btn:hover {
+    .week-picker:hover {
       transform: translateY(-1px);
       border-color: rgba(30, 111, 140, 0.35);
       box-shadow: 0 10px 24px rgba(30, 111, 140, 0.10);
     }
 
-    .nav-btn:active,
-    .week-btn:active {
+    .week-picker:focus {
+      outline: none;
+      border-color: rgba(30, 111, 140, 0.48);
+      box-shadow: 0 0 0 3px rgba(30, 111, 140, 0.12);
+    }
+
+    .week-picker:active {
       transform: translateY(0);
-    }
-
-    .week-btn {
-      min-width: 94px;
-      text-align: center;
-      display: inline-flex;
-      flex-direction: column;
-      gap: 2px;
-      align-items: center;
-      padding: 10px 12px;
-    }
-
-    .week-btn small {
-      color: var(--muted);
-      font-size: 11px;
-      line-height: 1.2;
-    }
-
-    .week-btn.active {
-      border-color: transparent;
-      color: white;
-      background: linear-gradient(135deg, var(--accent), #145067);
-      box-shadow: 0 14px 28px rgba(20, 80, 103, 0.24);
-    }
-
-    .week-btn.active small {
-      color: rgba(255, 255, 255, 0.84);
-    }
-
-    .selector-wrap {
-      display: grid;
-      gap: 10px;
-    }
-
-    .selector-label {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
-      justify-content: space-between;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .selector-track {
-      display: flex;
-      gap: 10px;
-      overflow-x: auto;
-      padding-bottom: 2px;
-      scrollbar-width: thin;
-    }
-
-    .selector-track::-webkit-scrollbar {
-      height: 8px;
-    }
-
-    .selector-track::-webkit-scrollbar-thumb {
-      background: rgba(20, 33, 46, 0.16);
-      border-radius: 999px;
     }
 
 
@@ -515,9 +471,13 @@
         gap: 10px 12px;
       }
 
-      .week-btn {
-        min-width: 88px;
-        padding: 9px 10px;
+      .timetable-center-title {
+        font-size: 22px;
+      }
+
+      .week-picker {
+        font-size: 15px;
+        padding: 9px 32px 9px 12px;
       }
 
       .timetable {
@@ -574,13 +534,13 @@
         font-size: 20px;
       }
 
+      .timetable-center-title {
+        font-size: 20px;
+      }
+
       .status-pill {
         font-size: 13px;
         padding: 9px 12px;
-      }
-
-      .selector-label {
-        font-size: 13px;
       }
 
       .timetable {
@@ -628,19 +588,23 @@
         justify-content: center;
       }
 
-      .nav-btn,
-      .week-btn {
-        flex: 1 0 auto;
+      .timetable-head {
+        display: grid;
+        grid-template-columns: 1fr;
+        justify-items: center;
+        min-height: 0;
       }
 
-      .week-btn {
-        min-width: 82px;
-        padding: 8px 8px;
+      .timetable-center-title {
+        font-size: 18px;
+        position: static;
+        transform: none;
       }
 
-      .selector-track {
-        gap: 8px;
-        padding-bottom: 6px;
+      .week-picker {
+        font-size: 14px;
+        padding: 8px 30px 8px 10px;
+        justify-self: center;
       }
 
       .timetable {
@@ -723,10 +687,6 @@
         font-size: clamp(24px, 8.4vw, 30px);
       }
 
-      .week-btn {
-        min-width: 78px;
-      }
-
       .timetable {
         min-width: 820px;
       }
@@ -735,37 +695,12 @@
 </head>
 <body>
   <div class="page">
-    <header class="hero">
-      <div class="eyebrow">2025-2026 第2学期</div>
-      <h1>2025电子信息2班 课表</h1>
-    </header>
-
-    <section class="panel controls">
-      <div class="panel-head">
-        <div class="panel-title">
-          <h2>周次选择</h2>
-          <p>点击任意周次查看对应课程安排，默认显示当前日期所在周。</p>
-        </div>
-        <div class="status-pill" id="week-range-pill">2026-03-09 至 2026-03-15</div>
-      </div>
-
-      <div class="selector-wrap">
-        <div class="selector-label">
-          <span>学期周历</span>
-          <span id="week-hint">第 1 周 · 2026-03-09 至 2026-03-15</span>
-        </div>
-        <div class="selector-track" id="week-selector"></div>
-      </div>
-
-    </section>
-
     <section class="panel timetable-panel">
-      <div class="panel-head">
-        <div class="panel-title">
-          <h2>当周课表</h2>
-          <p>表格左侧为节次，顶部为星期；卡片中的“周次”会跟随当前选择的周数过滤显示。</p>
-        </div>
-        <div class="status-pill" id="active-week-pill">第 1 周</div>
+      <div class="panel-head timetable-head">
+        <h2 class="timetable-center-title">电子信息2班课表</h2>
+        <select id="week-picker" class="week-picker" aria-label="选择周次">
+          <option value="1">第 1 周</option>
+        </select>
       </div>
       <div class="timetable-shell">
         <div class="timetable" id="timetable"></div>
@@ -793,7 +728,6 @@
       { label: '上午二', meta: '3-4节' },
       { label: '下午三', meta: '5-6节' },
       { label: '下午四', meta: '7-8节' },
-      { label: '晚上五', meta: '空档' },
     ];
 
     const courses = [
@@ -1064,10 +998,7 @@
     ];
 
     const timetableRoot = document.getElementById('timetable');
-    const selector = document.getElementById('week-selector');
-    const weekHint = document.getElementById('week-hint');
-    const weekRangePill = document.getElementById('week-range-pill');
-    const activeWeekPill = document.getElementById('active-week-pill');
+    const weekPicker = document.getElementById('week-picker');
 
     const today = new Date();
     const todayWeek = getCurrentWeek(today);
@@ -1108,11 +1039,6 @@
       return `${formatDate(start)} 至 ${formatDate(end)}`;
     }
 
-    function getWeekStartLabel(week) {
-      const start = addDays(TERM_START, (week - 1) * 7);
-      return `${start.getFullYear()}-${String(start.getMonth() + 1).padStart(2, '0')}-${String(start.getDate()).padStart(2, '0')}`;
-    }
-
     function isCourseActive(course, week) {
       return course.weekRule(week);
     }
@@ -1147,19 +1073,13 @@
       return card;
     }
 
-    function renderSelector() {
-      selector.innerHTML = '';
+    function renderWeekPicker() {
+      weekPicker.innerHTML = '';
       for (let week = 1; week <= TOTAL_WEEKS; week += 1) {
-        const button = document.createElement('button');
-        button.className = 'week-btn';
-        if (week === selectedWeek) {
-          button.classList.add('active');
-        }
-        button.type = 'button';
-        button.dataset.week = String(week);
-        button.innerHTML = `<span>第 ${week} 周</span><small>${getWeekStartLabel(week)}</small>`;
-        button.addEventListener('click', () => setSelectedWeek(week));
-        selector.appendChild(button);
+        const option = document.createElement('option');
+        option.value = String(week);
+        option.textContent = `第 ${week} 周`;
+        weekPicker.appendChild(option);
       }
     }
 
@@ -1219,27 +1139,13 @@
     }
 
     function updateControls() {
-      const weekRange = getWeekRange(selectedWeek);
-      weekHint.textContent = `第 ${selectedWeek} 周 · ${weekRange}`;
-      weekRangePill.textContent = `第 ${selectedWeek} 周 · ${weekRange}`;
-      activeWeekPill.textContent = `第 ${selectedWeek} 周`;
-
-      const weekButtons = selector.querySelectorAll('.week-btn');
-      weekButtons.forEach((button) => {
-        const week = Number(button.dataset.week);
-        button.classList.toggle('active', week === selectedWeek);
-      });
+      weekPicker.value = String(selectedWeek);
     }
 
     function setSelectedWeek(week) {
       selectedWeek = clamp(week, 1, TOTAL_WEEKS);
       updateControls();
       renderTimetable();
-      selector.querySelector(`.week-btn[data-week="${selectedWeek}"]`)?.scrollIntoView({
-        behavior: 'smooth',
-        inline: 'center',
-        block: 'nearest',
-      });
     }
 
     function syncToCurrentWeek() {
@@ -1249,7 +1155,10 @@
       }
     }
 
-    renderSelector();
+    renderWeekPicker();
+    weekPicker.addEventListener('change', (event) => {
+      setSelectedWeek(Number(event.target.value));
+    });
     setSelectedWeek(selectedWeek);
     syncToCurrentWeek();
   </script>
