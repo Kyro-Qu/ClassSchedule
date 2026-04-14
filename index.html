@@ -1,0 +1,1175 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>电子信息工程(专升本)2025(2)班课表</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f3efe7;
+      --bg-alt: #e8eef4;
+      --panel: rgba(255, 255, 255, 0.72);
+      --panel-strong: rgba(255, 255, 255, 0.88);
+      --text: #14212e;
+      --muted: #617184;
+      --line: rgba(20, 33, 46, 0.12);
+      --shadow: 0 24px 60px rgba(31, 42, 55, 0.12);
+      --accent: #1e6f8c;
+      --accent-2: #d67f3f;
+      --accent-3: #5f7f5d;
+      --accent-4: #8e6f52;
+      --accent-5: #7b5ca7;
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --radius-md: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: "Microsoft YaHei UI", "Microsoft YaHei", "PingFang SC", "Heiti SC", "SimHei", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(30, 111, 140, 0.16), transparent 36%),
+        radial-gradient(circle at top right, rgba(214, 127, 63, 0.14), transparent 32%),
+        radial-gradient(circle at bottom left, rgba(95, 127, 93, 0.10), transparent 34%),
+        linear-gradient(135deg, var(--bg), var(--bg-alt));
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(20, 33, 46, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(20, 33, 46, 0.02) 1px, transparent 1px);
+      background-size: 28px 28px;
+      mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), transparent 88%);
+      opacity: 0.55;
+    }
+
+    .page {
+      width: min(1400px, calc(100vw - 32px));
+      margin: 24px auto 40px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero,
+    .panel {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      backdrop-filter: blur(18px);
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--radius-xl);
+      padding: 28px;
+      margin-bottom: 20px;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto -8% -30% auto;
+      width: 340px;
+      height: 340px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(30, 111, 140, 0.18), transparent 68%);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(30, 111, 140, 0.12);
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      margin: 14px 0 10px;
+      font-family: "Songti SC", "STSong", "SimSun", "Microsoft YaHei UI", serif;
+      font-size: clamp(32px, 4vw, 56px);
+      line-height: 1.08;
+      letter-spacing: 0.02em;
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 900px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.8;
+    }
+
+    .hero-meta {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 22px;
+    }
+
+    .meta-card {
+      padding: 16px 18px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.62);
+      border: 1px solid rgba(20, 33, 46, 0.08);
+    }
+
+    .meta-card span {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .meta-card strong {
+      display: block;
+      font-size: 18px;
+      line-height: 1.3;
+    }
+
+    .panel {
+      border-radius: var(--radius-xl);
+      padding: 22px;
+      margin-bottom: 18px;
+    }
+
+    .panel-head {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 16px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .panel-title {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .panel-title h2 {
+      margin: 0;
+      font-size: 22px;
+      line-height: 1.2;
+    }
+
+    .panel-title p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(30, 111, 140, 0.10);
+      color: var(--accent);
+      font-size: 14px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .controls {
+      display: grid;
+      gap: 18px;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .week-nav {
+      display: inline-flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .nav-btn,
+    .week-btn {
+      appearance: none;
+      border: 1px solid rgba(20, 33, 46, 0.12);
+      background: rgba(255, 255, 255, 0.72);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 11px 14px;
+      font: inherit;
+      cursor: pointer;
+      transition: transform 160ms ease, background 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+    }
+
+    .nav-btn:hover,
+    .week-btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(30, 111, 140, 0.35);
+      box-shadow: 0 10px 24px rgba(30, 111, 140, 0.10);
+    }
+
+    .nav-btn:active,
+    .week-btn:active {
+      transform: translateY(0);
+    }
+
+    .week-btn {
+      min-width: 94px;
+      text-align: center;
+      display: inline-flex;
+      flex-direction: column;
+      gap: 2px;
+      align-items: center;
+      padding: 10px 12px;
+    }
+
+    .week-btn small {
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.2;
+    }
+
+    .week-btn.active {
+      border-color: transparent;
+      color: white;
+      background: linear-gradient(135deg, var(--accent), #145067);
+      box-shadow: 0 14px 28px rgba(20, 80, 103, 0.24);
+    }
+
+    .week-btn.active small {
+      color: rgba(255, 255, 255, 0.84);
+    }
+
+    .selector-wrap {
+      display: grid;
+      gap: 10px;
+    }
+
+    .selector-label {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .selector-track {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+      scrollbar-width: thin;
+    }
+
+    .selector-track::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    .selector-track::-webkit-scrollbar-thumb {
+      background: rgba(20, 33, 46, 0.16);
+      border-radius: 999px;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .summary-card {
+      border-radius: 20px;
+      padding: 16px 18px;
+      background: var(--panel-strong);
+      border: 1px solid rgba(20, 33, 46, 0.08);
+    }
+
+    .summary-card .label {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .summary-card .value {
+      font-size: 26px;
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 6px;
+    }
+
+    .summary-card .hint {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .timetable-shell {
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .timetable {
+      min-width: 1120px;
+      display: grid;
+      grid-template-columns: 94px repeat(7, minmax(130px, 1fr));
+      gap: 10px;
+    }
+
+    .grid-head,
+    .grid-period,
+    .grid-cell {
+      border-radius: 18px;
+      border: 1px solid rgba(20, 33, 46, 0.08);
+      background: rgba(255, 255, 255, 0.68);
+      box-shadow: 0 8px 18px rgba(20, 33, 46, 0.05);
+    }
+
+    .grid-head {
+      min-height: 74px;
+      padding: 14px 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 4px;
+      position: sticky;
+      top: 10px;
+      z-index: 2;
+      backdrop-filter: blur(8px);
+    }
+
+    .grid-head .day-name {
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .grid-head .day-date {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .grid-head.corner {
+      align-items: flex-start;
+      background: linear-gradient(135deg, rgba(30, 111, 140, 0.12), rgba(255, 255, 255, 0.74));
+    }
+
+    .grid-period {
+      min-height: 128px;
+      padding: 16px 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 6px;
+      position: sticky;
+      left: 0;
+      z-index: 1;
+      backdrop-filter: blur(8px);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.86), rgba(245, 240, 232, 0.92));
+    }
+
+    .grid-period .period-label {
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .grid-period .period-meta {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .grid-cell {
+      min-height: 128px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .grid-cell.empty {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0.40));
+    }
+
+    .grid-cell.empty .empty-note {
+      flex: 1;
+      margin: 0;
+      min-height: 100px;
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px dashed rgba(20, 33, 46, 0.14);
+      background: rgba(255, 255, 255, 0.58);
+      color: rgba(97, 113, 132, 0.92);
+      font-size: 13px;
+      line-height: 1.6;
+      text-align: left;
+      outline: none;
+      cursor: text;
+      letter-spacing: 0.02em;
+      font: inherit;
+      resize: vertical;
+      overflow: auto;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    .grid-cell.empty textarea.empty-note {
+      width: 100%;
+    }
+
+    .grid-cell.empty .empty-note::placeholder {
+      color: rgba(97, 113, 132, 0.72);
+    }
+
+    .grid-cell.empty .empty-note:focus {
+      border-color: rgba(30, 111, 140, 0.42);
+      box-shadow: 0 0 0 3px rgba(30, 111, 140, 0.10);
+      outline: none;
+    }
+
+    .course-card {
+      --accent-color: var(--accent);
+      --accent-soft: rgba(30, 111, 140, 0.14);
+      padding: 12px 12px 11px;
+      border-radius: 16px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.78)),
+        var(--accent-soft);
+      border: 1px solid rgba(20, 33, 46, 0.08);
+      border-left: 5px solid var(--accent-color);
+      display: grid;
+      gap: 8px;
+      box-shadow: 0 10px 20px rgba(20, 33, 46, 0.06);
+    }
+
+    .course-card .title {
+      font-size: 15px;
+      font-weight: 800;
+      line-height: 1.35;
+    }
+
+    .course-card .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 9px;
+      border-radius: 999px;
+      background: rgba(20, 33, 46, 0.06);
+      color: var(--text);
+      font-size: 12px;
+      line-height: 1;
+    }
+
+    .course-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .footer-note {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    @media (max-width: 1100px) {
+      .hero-meta,
+      .summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 760px) {
+      .page {
+        width: min(100vw - 18px, 1400px);
+        margin: 10px auto 24px;
+      }
+
+      .hero,
+      .panel {
+        padding: 18px;
+        border-radius: 22px;
+      }
+
+      .hero-meta,
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .toolbar {
+        align-items: stretch;
+      }
+
+      .status-pill {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .nav-btn,
+      .week-btn {
+        flex: 1 0 auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <div class="eyebrow">2025-2026 第2学期</div>
+      <h1>2025电子信息2班 课表</h1>
+      <p>第 1 周从 2026-03-09 开始。</p>
+      <div class="hero-meta">
+        <div class="meta-card">
+          <span>班级</span>
+          <strong>电子信息工程(专升本)2025(2)班</strong>
+        </div>
+        <div class="meta-card">
+          <span>开课日期</span>
+          <strong>2026-03-09</strong>
+        </div>
+        <div class="meta-card">
+          <span>总周数</span>
+          <strong>25 周</strong>
+        </div>
+        <div class="meta-card">
+          <span>当前周</span>
+          <strong id="current-week-text">第 1 周</strong>
+        </div>
+      </div>
+    </header>
+
+    <section class="panel controls">
+      <div class="panel-head">
+        <div class="panel-title">
+          <h2>周次选择</h2>
+          <p>点击任意周次查看对应课程安排，默认显示当前日期所在周。</p>
+        </div>
+        <div class="status-pill" id="week-range-pill">2026-03-09 至 2026-03-15</div>
+      </div>
+
+      <div class="toolbar">
+        <div class="week-nav">
+          <button class="nav-btn" id="prev-week" type="button">上一周</button>
+          <button class="nav-btn" id="next-week" type="button">下一周</button>
+        </div>
+        <div class="status-pill" id="week-course-count">本周 0 门课程</div>
+      </div>
+
+      <div class="selector-wrap">
+        <div class="selector-label">
+          <span>学期周历</span>
+          <span id="week-hint">第 1 周 · 2026-03-09 至 2026-03-15</span>
+        </div>
+        <div class="selector-track" id="week-selector"></div>
+      </div>
+
+      <div class="summary-grid" id="summary-grid"></div>
+    </section>
+
+    <section class="panel timetable-panel">
+      <div class="panel-head">
+        <div class="panel-title">
+          <h2>当周课表</h2>
+          <p>表格左侧为节次，顶部为星期；卡片中的“周次”会跟随当前选择的周数过滤显示。</p>
+        </div>
+        <div class="status-pill" id="active-week-pill">第 1 周</div>
+      </div>
+      <div class="timetable-shell">
+        <div class="timetable" id="timetable"></div>
+      </div>
+      <div class="footer-note">注：课表来源中的顺序为“课程 <> 周次 <> 校区 <> 地点 <> 教师 <> 教学班人数 <> 总学时”。本页面将“第 1 周”视为 2026-03-09 开始的一周。</div>
+    </section>
+  </div>
+
+  <script>
+    const TOTAL_WEEKS = 25;
+    const TERM_START = new Date(2026, 2, 9);
+    const DAY_MS = 24 * 60 * 60 * 1000;
+
+    const weekdays = [
+      { name: '星期一', short: '一' },
+      { name: '星期二', short: '二' },
+      { name: '星期三', short: '三' },
+      { name: '星期四', short: '四' },
+      { name: '星期五', short: '五' },
+      { name: '星期六', short: '六' },
+      { name: '星期日', short: '日' },
+    ];
+
+    const periods = [
+      { label: '上午一', meta: '1-2节' },
+      { label: '上午二', meta: '3-4节' },
+      { label: '下午三', meta: '5-6节' },
+      { label: '下午四', meta: '7-8节' },
+      { label: '晚上五', meta: '空档' },
+    ];
+
+    const courses = [
+      {
+        day: 0,
+        period: 0,
+        title: '数字信号处理',
+        weeksText: '6-15周',
+        location: '本部 J4-303',
+        teacher: '桂静宜',
+        classSize: '122',
+        hours: '40',
+        weekRule: (week) => week >= 6 && week <= 15,
+        accent: '#1e6f8c',
+      },
+      {
+        day: 3,
+        period: 0,
+        title: '中国近现代史纲要',
+        weeksText: '1-13周(单)',
+        location: '本部 J3-103',
+        teacher: '熊沂',
+        classSize: '100',
+        hours: '42',
+        weekRule: (week) => week >= 1 && week <= 13 && week % 2 === 1,
+        accent: '#5f7f5d',
+      },
+      {
+        day: 4,
+        period: 0,
+        title: '通信原理及应用',
+        weeksText: '1-13周',
+        location: '本部 J4-401',
+        teacher: '王海华',
+        classSize: '122',
+        hours: '52',
+        weekRule: (week) => week >= 1 && week <= 13,
+        accent: '#d67f3f',
+      },
+      {
+        day: 0,
+        period: 1,
+        title: 'DSP原理及应用',
+        weeksText: '6-15周',
+        location: '本部 J4-401',
+        teacher: '李玉平',
+        classSize: '122',
+        hours: '40',
+        weekRule: (week) => week >= 6 && week <= 15,
+        accent: '#7b5ca7',
+      },
+      {
+        day: 2,
+        period: 1,
+        title: '通信原理及应用',
+        weeksText: '1-13周',
+        location: '本部 J4-401',
+        teacher: '王海华',
+        classSize: '122',
+        hours: '52',
+        weekRule: (week) => week >= 1 && week <= 13,
+        accent: '#d67f3f',
+      },
+      {
+        day: 3,
+        period: 1,
+        title: 'DSP原理及应用',
+        weeksText: '6-15周',
+        location: '本部 J4-401',
+        teacher: '李玉平',
+        classSize: '122',
+        hours: '40',
+        weekRule: (week) => week >= 6 && week <= 15,
+        accent: '#7b5ca7',
+      },
+      {
+        day: 4,
+        period: 1,
+        title: '数字信号处理',
+        weeksText: '6-15周',
+        location: '本部 J4-104',
+        teacher: '桂静宜',
+        classSize: '122',
+        hours: '40',
+        weekRule: (week) => week >= 6 && week <= 15,
+        accent: '#1e6f8c',
+      },
+      {
+        day: 1,
+        period: 2,
+        title: '信息论基础',
+        weeksText: '6-8周,11-15周',
+        location: '本部 J1-107',
+        teacher: '王硕',
+        classSize: '122',
+        hours: '32',
+        weekRule: (week) => (week >= 6 && week <= 8) || (week >= 11 && week <= 15),
+        accent: '#8e6f52',
+      },
+      {
+        day: 1,
+        period: 0,
+        title: 'AMI/HDB3编译码过程实验',
+        weeksText: '11周',
+        location: 'K2-306',
+        teacher: '王海华',
+        classSize: '122',
+        hours: '4',
+        weekRule: (week) => week === 11,
+        accent: '#1e6f8c',
+      },
+      {
+        title: '2PSK(DPSK)调制解调实验',
+        day: 1,
+        period: 0,
+        weeksText: '12周',
+        location: 'K2-306',
+        teacher: '王海华',
+        classSize: '122',
+        hours: '4',
+        weekRule: (week) => week === 12,
+        accent: '#1e6f8c',
+      },
+      {
+        day: 1,
+        period: 0,
+        title: '抽样定理与PAM调制解调实验',
+        weeksText: '13周',
+        location: 'K2-306',
+        teacher: '王海华',
+        classSize: '122',
+        hours: '4',
+        weekRule: (week) => week === 13,
+        accent: '#1e6f8c',
+      },
+      {
+        day: 1,
+        period: 1,
+        title: 'AMI/HDB3编译码过程实验',
+        weeksText: '11周',
+        location: 'K2-306',
+        teacher: '王海华',
+        classSize: '122',
+        hours: '4',
+        weekRule: (week) => week === 11,
+        accent: '#1e6f8c',
+      },
+      {
+        day: 1,
+        period: 1,
+        title: '2PSK(DPSK)调制解调实验',
+        weeksText: '12周',
+        location: 'K2-306',
+        teacher: '王海华',
+        classSize: '122',
+        hours: '4',
+        weekRule: (week) => week === 12,
+        accent: '#1e6f8c',
+      },
+      {
+        day: 1,
+        period: 1,
+        title: '抽样定理与PAM调制解调实验',
+        weeksText: '13周',
+        location: 'K2-306',
+        teacher: '王海华',
+        classSize: '122',
+        hours: '4',
+        weekRule: (week) => week === 13,
+        accent: '#1e6f8c',
+      },
+      {
+        day: 2,
+        period: 2,
+        title: '中国近现代史纲要',
+        weeksText: '1-13周',
+        location: '本部 J1-307',
+        teacher: '熊沂',
+        classSize: '100',
+        hours: '42',
+        weekRule: (week) => week >= 1 && week <= 13,
+        accent: '#5f7f5d',
+      },
+      {
+        day: 3,
+        period: 2,
+        title: '信息论基础',
+        weeksText: '6-8周,11-15周',
+        location: '本部 J4-303',
+        teacher: '王硕',
+        classSize: '122',
+        hours: '32',
+        weekRule: (week) => (week >= 6 && week <= 8) || (week >= 11 && week <= 15),
+        accent: '#8e6f52',
+      },
+      {
+        day: 2,
+        period: 3,
+        title: '就业创业指导',
+        weeksText: '6周',
+        location: '本部 J4-103',
+        teacher: '郭红岩',
+        classSize: '122',
+        hours: '12',
+        weekRule: (week) => week === 6,
+        accent: '#d67f3f',
+      },
+      {
+        day: 2,
+        period: 3,
+        title: '就业创业指导',
+        weeksText: '7周',
+        location: '本部 J4-103',
+        teacher: '肖步云',
+        classSize: '122',
+        hours: '12',
+        weekRule: (week) => week === 7,
+        accent: '#d67f3f',
+      },
+      {
+        day: 2,
+        period: 3,
+        title: '就业创业指导',
+        weeksText: '8周',
+        location: '本部 J4-103',
+        teacher: '谢玉平',
+        classSize: '122',
+        hours: '12',
+        weekRule: (week) => week === 8,
+        accent: '#d67f3f',
+      },
+      {
+        day: 2,
+        period: 3,
+        title: '就业创业指导',
+        weeksText: '9周',
+        location: '本部 J4-103',
+        teacher: '陈君',
+        classSize: '122',
+        hours: '12',
+        weekRule: (week) => week === 9,
+        accent: '#d67f3f',
+      },
+      {
+        day: 2,
+        period: 3,
+        title: '就业创业指导',
+        weeksText: '10周',
+        location: '本部 J4-103',
+        teacher: '李楠',
+        classSize: '122',
+        hours: '12',
+        weekRule: (week) => week === 10,
+        accent: '#d67f3f',
+      },
+      {
+        day: 2,
+        period: 3,
+        title: '就业创业指导',
+        weeksText: '11周',
+        location: '本部 J4-103',
+        teacher: '陈希',
+        classSize: '122',
+        hours: '12',
+        weekRule: (week) => week === 11,
+        accent: '#d67f3f',
+      },
+    ];
+
+    const timetableRoot = document.getElementById('timetable');
+    const summaryGrid = document.getElementById('summary-grid');
+    const selector = document.getElementById('week-selector');
+    const weekHint = document.getElementById('week-hint');
+    const currentWeekText = document.getElementById('current-week-text');
+    const weekRangePill = document.getElementById('week-range-pill');
+    const weekCourseCount = document.getElementById('week-course-count');
+    const activeWeekPill = document.getElementById('active-week-pill');
+    const prevWeekBtn = document.getElementById('prev-week');
+    const nextWeekBtn = document.getElementById('next-week');
+    const noteStoragePrefix = 'timetable-note-v1';
+
+    const today = new Date();
+    const todayWeek = getCurrentWeek(today);
+    let selectedWeek = todayWeek;
+
+    function clamp(value, min, max) {
+      return Math.max(min, Math.min(max, value));
+    }
+
+    function getCurrentWeek(date) {
+      const diff = Math.floor((startOfDay(date) - startOfDay(TERM_START)) / DAY_MS);
+      if (diff < 0) {
+        return 1;
+      }
+      return clamp(Math.floor(diff / 7) + 1, 1, TOTAL_WEEKS);
+    }
+
+    function startOfDay(date) {
+      return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    }
+
+    function addDays(date, days) {
+      return new Date(date.getFullYear(), date.getMonth(), date.getDate() + days);
+    }
+
+    function formatDate(date) {
+      return `${date.getMonth() + 1}月${date.getDate()}日`;
+    }
+
+    function getWeekRange(week) {
+      const start = addDays(TERM_START, (week - 1) * 7);
+      const end = addDays(start, 6);
+      return `${formatDate(start)} 至 ${formatDate(end)}`;
+    }
+
+    function getWeekStartLabel(week) {
+      const start = addDays(TERM_START, (week - 1) * 7);
+      return `${start.getFullYear()}-${String(start.getMonth() + 1).padStart(2, '0')}-${String(start.getDate()).padStart(2, '0')}`;
+    }
+
+    function isCourseActive(course, week) {
+      return course.weekRule(week);
+    }
+
+    function createTag(text) {
+      const tag = document.createElement('span');
+      tag.className = 'tag';
+      tag.textContent = text;
+      return tag;
+    }
+
+    function getNoteStorageKey(week, dayIndex, periodIndex) {
+      return `${noteStoragePrefix}-${week}-${dayIndex}-${periodIndex}`;
+    }
+
+    function getSavedNote(week, dayIndex, periodIndex) {
+      return localStorage.getItem(getNoteStorageKey(week, dayIndex, periodIndex)) || '';
+    }
+
+    function saveNote(week, dayIndex, periodIndex, text) {
+      const key = getNoteStorageKey(week, dayIndex, periodIndex);
+      const value = text.trim();
+      if (value) {
+        localStorage.setItem(key, value);
+      } else {
+        localStorage.removeItem(key);
+      }
+    }
+
+    function resizeNote(noteElement) {
+      noteElement.style.height = 'auto';
+      noteElement.style.height = `${Math.max(100, noteElement.scrollHeight)}px`;
+    }
+
+    function syncTextareaNote(noteElement, week, dayIndex, periodIndex) {
+      saveNote(week, dayIndex, periodIndex, noteElement.value);
+      resizeNote(noteElement);
+    }
+
+    function createCourseCard(course) {
+      const card = document.createElement('article');
+      card.className = 'course-card';
+      card.style.setProperty('--accent-color', course.accent);
+      card.style.setProperty('--accent-soft', `${course.accent}20`);
+
+      const title = document.createElement('div');
+      title.className = 'title';
+      title.textContent = course.title;
+
+      const meta = document.createElement('div');
+      meta.className = 'meta';
+      const tags = [
+        course.location,
+        `教师 ${course.teacher}`,
+      ];
+      tags.forEach((text) => meta.appendChild(createTag(text)));
+
+      card.appendChild(title);
+      card.appendChild(meta);
+      return card;
+    }
+
+    function renderSelector() {
+      selector.innerHTML = '';
+      for (let week = 1; week <= TOTAL_WEEKS; week += 1) {
+        const button = document.createElement('button');
+        button.className = 'week-btn';
+        if (week === selectedWeek) {
+          button.classList.add('active');
+        }
+        button.type = 'button';
+        button.dataset.week = String(week);
+        button.innerHTML = `<span>第 ${week} 周</span><small>${getWeekStartLabel(week)}</small>`;
+        button.addEventListener('click', () => setSelectedWeek(week));
+        selector.appendChild(button);
+      }
+    }
+
+    function renderSummary() {
+      const activeCourses = courses.filter((course) => isCourseActive(course, selectedWeek));
+
+      const items = [
+        {
+          label: '本周课程',
+          value: `${activeCourses.length} 门`,
+          hint: '当前周进入课表的固定课程数量',
+        },
+        {
+          label: '日期范围',
+          value: getWeekRange(selectedWeek),
+          hint: '周一到周日的完整时间段',
+        },
+      ];
+
+      summaryGrid.innerHTML = '';
+      items.forEach((item) => {
+        const card = document.createElement('div');
+        card.className = 'summary-card';
+        card.innerHTML = `
+          <div class="label">${item.label}</div>
+          <div class="value">${item.value}</div>
+          <div class="hint">${item.hint}</div>
+        `;
+        summaryGrid.appendChild(card);
+      });
+    }
+
+    function renderTimetable() {
+      timetableRoot.innerHTML = '';
+
+      const corner = document.createElement('div');
+      corner.className = 'grid-head corner';
+      corner.innerHTML = '<div class="day-name">节次 / 星期</div><div class="day-date">第 ' + selectedWeek + ' 周</div>';
+      timetableRoot.appendChild(corner);
+
+      weekdays.forEach((day, dayIndex) => {
+        const header = document.createElement('div');
+        header.className = 'grid-head';
+        const date = addDays(TERM_START, (selectedWeek - 1) * 7 + dayIndex);
+        header.innerHTML = `<div class="day-name">${day.name}</div><div class="day-date">${formatDate(date)}</div>`;
+        timetableRoot.appendChild(header);
+      });
+
+      periods.forEach((period, periodIndex) => {
+        const periodCell = document.createElement('div');
+        periodCell.className = 'grid-period';
+        periodCell.innerHTML = `<div class="period-label">${period.label}</div><div class="period-meta">${period.meta}</div>`;
+        timetableRoot.appendChild(periodCell);
+
+        weekdays.forEach((day, dayIndex) => {
+          const cell = document.createElement('div');
+          cell.className = 'grid-cell';
+          const items = courses
+            .filter((course) => course.day === dayIndex && course.period === periodIndex && isCourseActive(course, selectedWeek))
+            .sort((left, right) => left.title.localeCompare(right.title, 'zh-CN'));
+
+          if (items.length === 0) {
+            cell.classList.add('empty');
+            const empty = document.createElement('textarea');
+            empty.className = 'empty-note';
+            empty.spellcheck = false;
+            empty.dir = 'ltr';
+            empty.rows = 4;
+            empty.placeholder = '点击填写内容';
+            const savedText = getSavedNote(selectedWeek, dayIndex, periodIndex);
+            if (savedText) {
+              empty.value = savedText;
+            } else {
+              empty.value = '';
+            }
+            empty.addEventListener('input', () => syncTextareaNote(empty, selectedWeek, dayIndex, periodIndex));
+            empty.addEventListener('blur', () => syncTextareaNote(empty, selectedWeek, dayIndex, periodIndex));
+            resizeNote(empty);
+            cell.appendChild(empty);
+          } else {
+            const list = document.createElement('div');
+            list.className = 'course-list';
+            items.forEach((course) => list.appendChild(createCourseCard(course)));
+            cell.appendChild(list);
+          }
+
+          timetableRoot.appendChild(cell);
+        });
+      });
+    }
+
+    function updateControls() {
+      const weekRange = getWeekRange(selectedWeek);
+      weekHint.textContent = `第 ${selectedWeek} 周 · ${weekRange}`;
+      currentWeekText.textContent = `第 ${selectedWeek} 周`;
+      weekRangePill.textContent = `第 ${selectedWeek} 周 · ${weekRange}`;
+      weekCourseCount.textContent = `本周 ${courses.filter((course) => isCourseActive(course, selectedWeek)).length} 门课程`;
+      activeWeekPill.textContent = `第 ${selectedWeek} 周`;
+
+      const weekButtons = selector.querySelectorAll('.week-btn');
+      weekButtons.forEach((button) => {
+        const week = Number(button.dataset.week);
+        button.classList.toggle('active', week === selectedWeek);
+      });
+    }
+
+    function setSelectedWeek(week) {
+      selectedWeek = clamp(week, 1, TOTAL_WEEKS);
+      updateControls();
+      renderSummary();
+      renderTimetable();
+      selector.querySelector(`.week-btn[data-week="${selectedWeek}"]`)?.scrollIntoView({
+        behavior: 'smooth',
+        inline: 'center',
+        block: 'nearest',
+      });
+    }
+
+    function syncToCurrentWeek() {
+      const currentWeek = getCurrentWeek(new Date());
+      if (currentWeek !== selectedWeek) {
+        setSelectedWeek(currentWeek);
+      }
+    }
+
+    prevWeekBtn.addEventListener('click', () => setSelectedWeek(selectedWeek - 1));
+    nextWeekBtn.addEventListener('click', () => setSelectedWeek(selectedWeek + 1));
+
+    renderSelector();
+    setSelectedWeek(selectedWeek);
+    syncToCurrentWeek();
+  </script>
+</body>
+</html>
