@@ -1,0 +1,1557 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>个人课表 · 2026-2027学年第1学期</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+      background-color: #f8fafc;
+      color: #0f172a;
+    }
+    .course-card-transition {
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .course-card-transition:hover {
+      transform: translateY(-2px);
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-indigo-100 selection:text-indigo-900">
+
+  <!-- Top Navigation & Student Header -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
+        <!-- Student Info -->
+        <div class="flex items-start sm:items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-bold text-lg shadow-sm shrink-0">
+              课
+            </div>
+            <div>
+              <div class="flex items-center gap-2 flex-wrap">
+                <h1 class="text-base sm:text-lg font-bold text-slate-900 tracking-tight">个人课表</h1>
+                <span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-indigo-50 text-indigo-700 border border-indigo-100">
+                  2026-2027学年第1学期
+                </span>
+              </div>
+              <p class="text-xs text-slate-500 mt-0.5">
+                电子信息工程(专升本)2025(1)/(2)班 · <span id="liveClockText" class="font-medium text-slate-700">加载时间中...</span>
+              </p>
+            </div>
+          </div>
+
+          <!-- Mobile Settings Button -->
+          <button id="openSettingsBtnMobile" type="button" class="lg:hidden inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
+            <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            设置
+          </button>
+        </div>
+
+        <!-- Controls Bar: View Tabs, Week Stepper, Date Jump, Today Button -->
+        <div class="flex flex-wrap items-center justify-between lg:justify-end gap-2">
+          <!-- View Mode Switcher -->
+          <div class="inline-flex p-1 rounded-xl bg-slate-100 border border-slate-200/80">
+            <button id="tabDayView" type="button" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              今日/按日看课
+            </button>
+            <button id="tabWeekView" type="button" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+              本周网格课表
+            </button>
+            <button id="tabAllCourses" type="button" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+              课程总览
+            </button>
+          </div>
+
+          <!-- Week Navigation -->
+          <div class="flex items-center gap-1 bg-white border border-slate-200 rounded-xl px-1.5 py-1 shadow-2xs">
+            <button id="prevWeekBtn" type="button" title="上一周" class="p-1 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+            </button>
+            <label for="weekSelect" class="sr-only">选择周次</label>
+            <select id="weekSelect" class="text-xs font-semibold text-slate-800 bg-transparent px-1.5 py-0.5 focus:outline-none cursor-pointer">
+            </select>
+            <button id="nextWeekBtn" type="button" title="下一周" class="p-1 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+
+          <!-- Date Picker & Jump to Today -->
+          <div class="flex items-center gap-1.5">
+            <input id="datePickerInput" type="date" aria-label="选择日期" class="text-xs font-medium text-slate-700 bg-white border border-slate-200 rounded-xl px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500" />
+            <button id="jumpTodayBtn" type="button" class="px-2.5 py-1.5 rounded-xl text-xs font-semibold bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200/60 transition">
+              回到今天
+            </button>
+            <button id="openSettingsBtnDesktop" type="button" class="hidden lg:inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
+              <svg class="w-3.5 h-3.5 text-slate-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+              开学周/作息设置
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-5 space-y-5">
+
+    <!-- Status Summary Banner -->
+    <section class="bg-gradient-to-r from-indigo-600 via-indigo-600 to-violet-600 rounded-2xl p-4 sm:p-5 text-white shadow-md">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="space-y-1">
+          <div class="flex items-center gap-2 flex-wrap">
+            <span id="bannerWeekBadge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-white/20 backdrop-blur-xs">
+              第 8 周
+            </span>
+            <span id="bannerDateText" class="text-sm font-medium text-indigo-100">
+              2026年10月20日 星期二
+            </span>
+            <span id="bannerIsTodayTag" class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-emerald-400/25 text-emerald-100 border border-emerald-300/30">
+              当前日期
+            </span>
+          </div>
+          <h2 id="bannerHeadline" class="text-lg sm:text-xl font-bold tracking-tight mt-1">
+            今日无固定节次排课
+          </h2>
+          <p id="bannerSubtext" class="text-xs sm:text-sm text-indigo-100/90">
+            本周共有 1 门固定节次课（2学时）与 2 门其他周次课程正在进行。
+          </p>
+        </div>
+
+        <!-- Quick Stats Pills -->
+        <div class="grid grid-cols-3 gap-2.5 sm:gap-3 shrink-0">
+          <div class="bg-white/10 backdrop-blur-xs rounded-xl px-3.5 py-2.5 border border-white/15">
+            <div class="text-[11px] text-indigo-100">所选日排课</div>
+            <div id="statDayCount" class="text-lg sm:text-xl font-bold mt-0.5">0 节</div>
+          </div>
+          <div class="bg-white/10 backdrop-blur-xs rounded-xl px-3.5 py-2.5 border border-white/15">
+            <div class="text-[11px] text-indigo-100">本周排课</div>
+            <div id="statWeekCount" class="text-lg sm:text-xl font-bold mt-0.5">1 次 (2节)</div>
+          </div>
+          <div class="bg-white/10 backdrop-blur-xs rounded-xl px-3.5 py-2.5 border border-white/15">
+            <div class="text-[11px] text-indigo-100">本周其他课程</div>
+            <div id="statOtherCount" class="text-lg sm:text-xl font-bold mt-0.5">2 门</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Weekday Quick Selector Strip (Always visible in Day View & helpful in Week View) -->
+    <section class="bg-white rounded-2xl border border-slate-200 p-3 shadow-2xs">
+      <div class="flex items-center justify-between mb-2 px-1">
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-semibold text-slate-700">本周每日速览</span>
+          <span id="weekRangeLabel" class="text-xs text-slate-400"></span>
+        </div>
+        <div class="flex items-center gap-3 text-xs">
+          <label class="inline-flex items-center gap-1.5 cursor-pointer select-none text-slate-600">
+            <input id="showNonCurrentToggle" type="checkbox" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500" />
+            <span>显示非本周课程预告</span>
+          </label>
+        </div>
+      </div>
+      <div id="weekdayStrip" class="grid grid-cols-7 gap-1.5 sm:gap-2">
+        <!-- Populated by JS -->
+      </div>
+    </section>
+
+    <!-- VIEW 1: DAY VIEW (按日看课) -->
+    <section id="dayViewSection" class="space-y-4">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        <!-- Left 2 Cols: Selected Day Schedule -->
+        <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 shadow-2xs space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div>
+              <h3 id="dayViewTitle" class="text-base font-bold text-slate-900">星期二 课程安排</h3>
+              <p id="dayViewSubtitle" class="text-xs text-slate-500 mt-0.5">点击任意课程卡片可查看详细教学班、学分及备注信息</p>
+            </div>
+            <button id="openAddCustomBtnDay" type="button" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+              添加自定义日程
+            </button>
+          </div>
+
+          <div id="dayCoursesContainer" class="space-y-3">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- Right 1 Col: This Week's Classes & Other Courses -->
+        <div class="space-y-4">
+          <!-- This Week Active Fixed Classes Summary -->
+          <div class="bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 shadow-2xs space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-indigo-600"></span>
+                本周固定排课汇总
+              </h3>
+              <span id="sideWeekBadge" class="text-xs font-medium text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md">第8周</span>
+            </div>
+            <div id="weekSummaryList" class="space-y-2.5">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+
+          <!-- Other / Non-Fixed Slot Courses -->
+          <div class="bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 shadow-2xs space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                其他课程（无固定节次）
+              </h3>
+              <span class="text-[11px] text-slate-400">来自课表底部栏</span>
+            </div>
+            <div id="otherCoursesListDay" class="space-y-2.5">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 2: WEEK GRID VIEW (本周网格课表) -->
+    <section id="weekViewSection" class="hidden space-y-4">
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-2xs overflow-hidden">
+        <div class="p-4 border-b border-slate-200 flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center gap-2">
+            <h3 class="text-base font-bold text-slate-900">周课表视图（1-10节）</h3>
+            <span id="gridWeekStatusBadge" class="text-xs font-medium px-2 py-0.5 rounded-md bg-indigo-50 text-indigo-700"></span>
+          </div>
+          <div class="flex items-center gap-3 text-xs text-slate-500">
+            <span class="inline-flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-xs bg-indigo-600 inline-block"></span> 本周应上课程</span>
+            <span class="inline-flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-xs bg-slate-200 border border-dashed border-slate-400 inline-block"></span> 非本周课程(如9-13周)</span>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full border-collapse min-w-[760px] text-left">
+            <thead>
+              <tr id="weekGridHeaderRow" class="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-600">
+                <!-- Populated by JS -->
+              </tr>
+            </thead>
+            <tbody id="weekGridBody" class="divide-y divide-slate-200 text-xs">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Bottom Bar Matching Original PDF "其他课程" -->
+        <div class="bg-slate-50/80 border-t border-slate-200 px-4 py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-slate-600">
+          <div id="gridFooterOtherCourses" class="flex flex-wrap items-center gap-2">
+            <!-- Populated by JS -->
+          </div>
+          <div class="text-slate-400 shrink-0">
+            原表打印时间：2026-10-20
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 3: ALL COURSES OVERVIEW (课程总览) -->
+    <section id="allCoursesSection" class="hidden space-y-4">
+      <div class="bg-white rounded-2xl border border-slate-200 p-4 sm:p-6 shadow-2xs space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
+          <div>
+            <h3 class="text-base font-bold text-slate-900">2026-2027学年第1学期 全部课程明细</h3>
+            <p class="text-xs text-slate-500 mt-0.5">完整收录课表 PDF 中的固定排课、其他课程及您的自定义日程</p>
+          </div>
+          <button id="openAddCustomBtnAll" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-indigo-600 text-white hover:bg-indigo-700 transition self-start sm:self-auto">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+            新增自定义课程/提醒
+          </button>
+        </div>
+
+        <div id="allCoursesGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Course Detail Modal -->
+  <div id="courseDetailModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full shadow-xl border border-slate-200 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+      <div class="px-5 py-4 bg-indigo-600 text-white flex items-start justify-between gap-3">
+        <div>
+          <span id="modalCourseTag" class="inline-block px-2 py-0.5 rounded-md text-[11px] font-semibold bg-white/20 mb-1">专业课程</span>
+          <h3 id="modalCourseTitle" class="text-lg font-bold">专业外语理论</h3>
+        </div>
+        <button id="closeDetailModalBtn" type="button" class="p-1 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="p-5 space-y-4 text-xs sm:text-sm text-slate-700 max-h-[75vh] overflow-y-auto">
+        <div id="modalCourseMetaGrid" class="grid grid-cols-2 gap-3 bg-slate-50 p-3.5 rounded-xl border border-slate-200/80">
+          <!-- Populated by JS -->
+        </div>
+        <div id="modalCourseFullDesc" class="space-y-1.5 text-xs text-slate-600 bg-slate-50/60 p-3 rounded-xl border border-slate-100">
+          <!-- Populated by JS -->
+        </div>
+        <div>
+          <label for="modalCourseNoteInput" class="block text-xs font-semibold text-slate-700 mb-1">个人课程备注 / 作业提醒（自动保存在本地浏览器）</label>
+          <textarea id="modalCourseNoteInput" rows="3" placeholder="例如：带专业英语词汇册、记录考勤或作业截止时间..." class="w-full rounded-xl border border-slate-200 p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"></textarea>
+          <div class="flex items-center justify-between mt-2">
+            <span id="noteSavedToast" class="text-xs text-emerald-600 font-medium opacity-0 transition">✓ 备注已保存</span>
+            <div class="flex items-center gap-2">
+              <button id="deleteCustomCourseBtn" type="button" class="hidden px-3 py-1.5 rounded-lg text-xs font-semibold bg-rose-50 text-rose-600 hover:bg-rose-100 transition">
+                删除此自定义日程
+              </button>
+              <button id="saveCourseNoteBtn" type="button" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 text-white hover:bg-indigo-700 transition">
+                保存备注
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Modal (Semester Start Date & Period Times) -->
+  <div id="settingsModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full shadow-xl border border-slate-200 overflow-hidden">
+      <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between">
+        <div>
+          <h3 class="text-base font-bold text-slate-900">课表周次与作息时间设置</h3>
+          <p class="text-xs text-slate-500 mt-0.5">可根据学校实际校历校准第1周周一日期与每节课时间</p>
+        </div>
+        <button id="closeSettingsModalBtn" type="button" class="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="p-5 space-y-4 max-h-[75vh] overflow-y-auto text-xs">
+        <div class="bg-indigo-50/70 border border-indigo-100 rounded-xl p-3.5 space-y-2">
+          <label for="semesterStartInput" class="block font-semibold text-indigo-950">本学期第 1 周周一日期</label>
+          <p class="text-indigo-800/80 leading-relaxed">
+            系统根据该日期自动推算当前日期属于第几教学周。课表打印日期为 <strong>2026-10-20</strong>，默认设置 <strong>2026-08-31</strong> 为第1周周一（使 10月20日 处于第8周，恰好匹配周三 8-13周 的《专业外语理论》开课周）。
+          </p>
+          <div class="flex flex-wrap items-center gap-2 pt-1">
+            <input id="semesterStartInput" type="date" class="rounded-lg border border-indigo-200 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20" />
+            <button id="presetAug31Btn" type="button" class="px-2.5 py-1 rounded-lg bg-white border border-indigo-200 text-indigo-700 hover:bg-indigo-100 font-medium transition">
+              设为 2026-08-31 (10/20为第8周)
+            </button>
+            <button id="presetSep07Btn" type="button" class="px-2.5 py-1 rounded-lg bg-white border border-indigo-200 text-indigo-700 hover:bg-indigo-100 font-medium transition">
+              设为 2026-09-07 (10/20为第7周)
+            </button>
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-semibold text-slate-800">各节次上下课时间设置</span>
+            <button id="resetPeriodTimesBtn" type="button" class="text-indigo-600 hover:underline font-medium">恢复默认作息</button>
+          </div>
+          <div id="periodTimesEditorGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+      <div class="px-5 py-3 bg-slate-50 border-t border-slate-200 flex items-center justify-end gap-2">
+        <button id="saveSettingsBtn" type="button" class="px-4 py-1.5 rounded-xl text-xs font-semibold bg-indigo-600 text-white hover:bg-indigo-700 transition">
+          保存并应用设置
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Custom Course Modal -->
+  <div id="addCustomModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full shadow-xl border border-slate-200 overflow-hidden">
+      <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between">
+        <h3 class="text-base font-bold text-slate-900">添加自定义课程 / 学习日程</h3>
+        <button id="closeAddCustomModalBtn" type="button" class="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <form id="addCustomForm" class="p-5 space-y-3 text-xs">
+        <div>
+          <label for="customTitle" class="block font-semibold text-slate-700 mb-1">课程/事项名称 *</label>
+          <input id="customTitle" type="text" required placeholder="例如：形势与政策专题讲座 / 实验室自习" class="w-full rounded-xl border border-slate-200 px-3 py-2 focus:outline-none focus:border-indigo-500" />
+        </div>
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label for="customWeekday" class="block font-semibold text-slate-700 mb-1">星期</label>
+            <select id="customWeekday" class="w-full rounded-xl border border-slate-200 px-2.5 py-2 bg-white">
+              <option value="1">星期一</option>
+              <option value="2">星期二</option>
+              <option value="3">星期三</option>
+              <option value="4">星期四</option>
+              <option value="5">星期五</option>
+              <option value="6">星期六</option>
+              <option value="7">星期日</option>
+            </select>
+          </div>
+          <div>
+            <label for="customLocation" class="block font-semibold text-slate-700 mb-1">教室/场地</label>
+            <input id="customLocation" type="text" placeholder="如：本部 J2-501 / 线上" class="w-full rounded-xl border border-slate-200 px-3 py-2" />
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label for="customStartPeriod" class="block font-semibold text-slate-700 mb-1">开始节次</label>
+            <select id="customStartPeriod" class="w-full rounded-xl border border-slate-200 px-2.5 py-2 bg-white">
+              <option value="1">第 1 节</option>
+              <option value="2">第 2 节</option>
+              <option value="3">第 3 节</option>
+              <option value="4">第 4 节</option>
+              <option value="5">第 5 节</option>
+              <option value="6">第 6 节</option>
+              <option value="7">第 7 节</option>
+              <option value="8">第 8 节</option>
+              <option value="9">第 9 节</option>
+              <option value="10">第 10 节</option>
+            </select>
+          </div>
+          <div>
+            <label for="customEndPeriod" class="block font-semibold text-slate-700 mb-1">结束节次</label>
+            <select id="customEndPeriod" class="w-full rounded-xl border border-slate-200 px-2.5 py-2 bg-white">
+              <option value="1">第 1 节</option>
+              <option value="2" selected>第 2 节</option>
+              <option value="3">第 3 节</option>
+              <option value="4">第 4 节</option>
+              <option value="5">第 5 节</option>
+              <option value="6">第 6 节</option>
+              <option value="7">第 7 节</option>
+              <option value="8">第 8 节</option>
+              <option value="9">第 9 节</option>
+              <option value="10">第 10 节</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-cols-3 gap-2.5">
+          <div>
+            <label for="customStartWeek" class="block font-semibold text-slate-700 mb-1">起始周</label>
+            <input id="customStartWeek" type="number" min="1" max="20" value="1" class="w-full rounded-xl border border-slate-200 px-3 py-2" />
+          </div>
+          <div>
+            <label for="customEndWeek" class="block font-semibold text-slate-700 mb-1">结束周</label>
+            <input id="customEndWeek" type="number" min="1" max="20" value="20" class="w-full rounded-xl border border-slate-200 px-3 py-2" />
+          </div>
+          <div>
+            <label for="customTeacher" class="block font-semibold text-slate-700 mb-1">任课教师</label>
+            <input id="customTeacher" type="text" placeholder="选填" class="w-full rounded-xl border border-slate-200 px-3 py-2" />
+          </div>
+        </div>
+        <div class="pt-2 flex justify-end gap-2">
+          <button id="cancelAddCustomBtn" type="button" class="px-3.5 py-1.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100">取消</button>
+          <button type="submit" class="px-4 py-1.5 rounded-xl bg-indigo-600 text-white font-semibold hover:bg-indigo-700">确认添加</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // ==========================================
+    // 1. INITIAL DATA FROM UPLOADED PDF SCHEDULE
+    // ==========================================
+    const BASE_FIXED_COURSES = [
+      {
+        id: 'eng-mon-34',
+        title: '专业外语理论',
+        weekday: 1, // 星期一
+        startPeriod: 3,
+        endPeriod: 4,
+        startWeek: 9,
+        endWeek: 13,
+        weeksText: '9-13周',
+        campus: '本部',
+        location: 'J2-501',
+        teacher: 'NAGENDRA PARASD YADAV',
+        classCode: '专业外语-0003',
+        classGroup: '电子信息工程(专升本)2025(1)班; 电子信息工程(专升本)2025(2)班',
+        assessment: '考试',
+        hoursBreakdown: '理论:32 / 周学时:6 / 总学时:32',
+        credits: '2.0',
+        color: 'indigo',
+        isCustom: false
+      },
+      {
+        id: 'eng-wed-56',
+        title: '专业外语理论',
+        weekday: 3, // 星期三
+        startPeriod: 5,
+        endPeriod: 6,
+        startWeek: 8,
+        endWeek: 13,
+        weeksText: '8-13周',
+        campus: '本部',
+        location: 'J2-501',
+        teacher: 'NAGENDRA PARASD YADAV',
+        classCode: '专业外语-0003',
+        classGroup: '电子信息工程(专升本)2025(1)班; 电子信息工程(专升本)2025(2)班',
+        assessment: '考试',
+        hoursBreakdown: '理论:32 / 周学时:6 / 总学时:32',
+        credits: '2.0',
+        color: 'indigo',
+        isCustom: false
+      },
+      {
+        id: 'eng-thu-12',
+        title: '专业外语理论',
+        weekday: 4, // 星期四
+        startPeriod: 1,
+        endPeriod: 2,
+        startWeek: 9,
+        endWeek: 13,
+        weeksText: '9-13周',
+        campus: '本部',
+        location: 'J2-501',
+        teacher: 'NAGENDRA PARASD YADAV',
+        classCode: '专业外语-0003',
+        classGroup: '电子信息工程(专升本)2025(1)班; 电子信息工程(专升本)2025(2)班',
+        assessment: '考试',
+        hoursBreakdown: '理论:32 / 周学时:6 / 总学时:32',
+        credits: '2.0',
+        color: 'indigo',
+        isCustom: false
+      }
+    ];
+
+    const OTHER_COURSES = [
+      {
+        id: 'other-policy',
+        title: '形势与政策理论',
+        teacher: '陈诗雨',
+        startWeek: 1,
+        endWeek: 20,
+        weeksText: '1-20周 (共20周)',
+        location: '无固定场地（按学院通知/线上安排）',
+        category: '其他课程（课表底部栏）',
+        hoursBreakdown: '共20周'
+      },
+      {
+        id: 'other-psych',
+        title: '大学生心理健康教育理论',
+        teacher: '解倩',
+        startWeek: 1,
+        endWeek: 8,
+        weeksText: '1-8周 (共8周)',
+        location: '无固定场地（按学院通知/线上安排）',
+        category: '其他课程（课表底部栏）',
+        hoursBreakdown: '共8周'
+      }
+    ];
+
+    const DEFAULT_PERIOD_TIMES = [
+      { period: 1, group: '上午', start: '08:00', end: '08:45' },
+      { period: 2, group: '上午', start: '08:55', end: '09:40' },
+      { period: 3, group: '上午', start: '10:00', end: '10:45' },
+      { period: 4, group: '上午', start: '10:55', end: '11:40' },
+      { period: 5, group: '下午', start: '14:00', end: '14:45' },
+      { period: 6, group: '下午', start: '14:55', end: '15:40' },
+      { period: 7, group: '下午', start: '16:00', end: '16:45' },
+      { period: 8, group: '下午', start: '16:55', end: '17:40' },
+      { period: 9, group: '晚上', start: '19:00', end: '19:45' },
+      { period: 10, group: '晚上', start: '19:55', end: '20:40' }
+    ];
+
+    const WEEKDAY_NAMES = ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日'];
+    const SHORT_WEEKDAY_NAMES = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
+
+    // ==========================================
+    // 2. STATE & STORAGE HELPERS
+    // ==========================================
+    function safeGetStorage(key, fallback) {
+      try {
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : fallback;
+      } catch (e) {
+        return fallback;
+      }
+    }
+
+    function safeSetStorage(key, value) {
+      try {
+        localStorage.setItem(key, JSON.stringify(value));
+      } catch (e) {
+        // Ignore storage errors in sandboxed iframe
+      }
+    }
+
+    // Format Date as YYYY-MM-DD in local time
+    function formatDateYMD(dateObj) {
+      const y = dateObj.getFullYear();
+      const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+      const d = String(dateObj.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    }
+
+    function parseYMD(ymdStr) {
+      const parts = (ymdStr || '2026-10-20').split('-').map(Number);
+      return new Date(parts[0], (parts[1] || 1) - 1, parts[2] || 1, 12, 0, 0);
+    }
+
+    // Get Monday of the week for a given Date
+    function getMondayOfDate(dateObj) {
+      const d = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate(), 12, 0, 0);
+      const day = d.getDay(); // 0 is Sunday, 1 is Monday
+      const diff = day === 0 ? -6 : 1 - day;
+      d.setDate(d.getDate() + diff);
+      return d;
+    }
+
+    // Weekday index 1 (Mon) .. 7 (Sun)
+    function getWeekday1To7(dateObj) {
+      const day = dateObj.getDay();
+      return day === 0 ? 7 : day;
+    }
+
+    // App State
+    const state = {
+      viewMode: 'day', // 'day' | 'week' | 'all'
+      semesterStartMonday: safeGetStorage('schedule_semester_start', '2026-08-31'),
+      periodTimes: safeGetStorage('schedule_period_times', DEFAULT_PERIOD_TIMES),
+      customCourses: safeGetStorage('schedule_custom_courses', []),
+      courseNotes: safeGetStorage('schedule_course_notes', {}),
+      showNonCurrentWeek: true,
+      selectedDateYMD: formatDateYMD(new Date()),
+      activeModalCourseId: null
+    };
+
+    function getAllFixedCourses() {
+      return [...BASE_FIXED_COURSES, ...state.customCourses];
+    }
+
+    // Calculate teaching week number (1..20) for a given YYYY-MM-DD
+    function getWeekNumberForDate(ymdStr) {
+      const target = parseYMD(ymdStr);
+      const startMon = getMondayOfDate(parseYMD(state.semesterStartMonday));
+      const diffMs = target.getTime() - startMon.getTime();
+      const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+      const weekNum = Math.floor(diffDays / 7) + 1;
+      return Math.max(1, Math.min(20, weekNum));
+    }
+
+    // Get Date object for (weekNumber, weekday 1..7)
+    function getDateForWeekAndDay(weekNum, weekday1To7) {
+      const startMon = getMondayOfDate(parseYMD(state.semesterStartMonday));
+      const result = new Date(startMon);
+      result.setDate(startMon.getDate() + (weekNum - 1) * 7 + (weekday1To7 - 1));
+      return result;
+    }
+
+    function getPeriodTimeRange(startPeriod, endPeriod) {
+      const pStart = state.periodTimes.find(p => p.period === Number(startPeriod)) || DEFAULT_PERIOD_TIMES[0];
+      const pEnd = state.periodTimes.find(p => p.period === Number(endPeriod)) || pStart;
+      return `${pStart.start} - ${pEnd.end}`;
+    }
+
+    // Check class live status based on current clock if viewing today
+    function getCourseLiveStatus(course, selectedYMD) {
+      const todayYMD = formatDateYMD(new Date());
+      if (selectedYMD !== todayYMD) {
+        return selectedYMD < todayYMD
+          ? { label: '已结束', classes: 'bg-slate-100 text-slate-500' }
+          : { label: '待上课', classes: 'bg-indigo-50 text-indigo-700' };
+      }
+      const now = new Date();
+      const nowMins = now.getHours() * 60 + now.getMinutes();
+      const pStart = state.periodTimes.find(p => p.period === Number(course.startPeriod)) || DEFAULT_PERIOD_TIMES[0];
+      const pEnd = state.periodTimes.find(p => p.period === Number(course.endPeriod)) || pStart;
+      const [sh, sm] = pStart.start.split(':').map(Number);
+      const [eh, em] = pEnd.end.split(':').map(Number);
+      const startMins = sh * 60 + sm;
+      const endMins = eh * 60 + em;
+
+      if (nowMins < startMins - 30) {
+        return { label: `今日 ${pStart.start} 上课`, classes: 'bg-indigo-50 text-indigo-700 border border-indigo-200' };
+      } else if (nowMins < startMins) {
+        return { label: '即将上课', classes: 'bg-amber-50 text-amber-700 border border-amber-200 animate-pulse' };
+      } else if (nowMins <= endMins) {
+        return { label: '正在上课中', classes: 'bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold' };
+      } else {
+        return { label: '今日已结束', classes: 'bg-slate-100 text-slate-500' };
+      }
+    }
+
+    // ==========================================
+    // 3. UI RENDERING FUNCTIONS
+    // ==========================================
+    function updateLiveClock() {
+      const now = new Date();
+      const ymd = formatDateYMD(now);
+      const wkName = WEEKDAY_NAMES[getWeekday1To7(now) - 1];
+      const timeStr = now.toTimeString().slice(0, 8);
+      const currentWeek = getWeekNumberForDate(ymd);
+      const el = document.getElementById('liveClockText');
+      if (el) {
+        el.textContent = `当前时间：${ymd} ${wkName} ${timeStr}（第${currentWeek}周）`;
+      }
+    }
+
+    function populateWeekSelect() {
+      const select = document.getElementById('weekSelect');
+      const currentSelectedWeek = getWeekNumberForDate(state.selectedDateYMD);
+      const todayWeek = getWeekNumberForDate(formatDateYMD(new Date()));
+      select.innerHTML = '';
+      for (let w = 1; w <= 20; w++) {
+        const opt = document.createElement('option');
+        opt.value = String(w);
+        opt.textContent = `第 ${w} 周${w === todayWeek ? ' (本周)' : ''}`;
+        if (w === currentSelectedWeek) opt.selected = true;
+        select.appendChild(opt);
+      }
+    }
+
+    function renderViewTabs() {
+      const tabs = [
+        { id: 'tabDayView', mode: 'day' },
+        { id: 'tabWeekView', mode: 'week' },
+        { id: 'tabAllCourses', mode: 'all' }
+      ];
+      tabs.forEach(t => {
+        const btn = document.getElementById(t.id);
+        if (state.viewMode === t.mode) {
+          btn.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 bg-white text-indigo-600 shadow-2xs';
+        } else {
+          btn.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 text-slate-600 hover:text-slate-900';
+        }
+      });
+
+      document.getElementById('dayViewSection').classList.toggle('hidden', state.viewMode !== 'day');
+      document.getElementById('weekViewSection').classList.toggle('hidden', state.viewMode !== 'week');
+      document.getElementById('allCoursesSection').classList.toggle('hidden', state.viewMode !== 'all');
+    }
+
+    function renderTopBannerAndStats() {
+      const selDate = parseYMD(state.selectedDateYMD);
+      const selWeek = getWeekNumberForDate(state.selectedDateYMD);
+      const selWeekday = getWeekday1To7(selDate);
+      const todayYMD = formatDateYMD(new Date());
+      const isToday = state.selectedDateYMD === todayYMD;
+
+      const allCourses = getAllFixedCourses();
+      const activeDayCourses = allCourses
+        .filter(c => c.weekday === selWeekday && selWeek >= c.startWeek && selWeek <= c.endWeek)
+        .sort((a, b) => a.startPeriod - b.startPeriod);
+
+      const activeWeekCourses = allCourses
+        .filter(c => selWeek >= c.startWeek && selWeek <= c.endWeek)
+        .sort((a, b) => a.weekday - b.weekday || a.startPeriod - b.startPeriod);
+
+      const activeOtherCourses = OTHER_COURSES.filter(c => selWeek >= c.startWeek && selWeek <= c.endWeek);
+
+      document.getElementById('bannerWeekBadge').textContent = `第 ${selWeek} 周`;
+      document.getElementById('bannerDateText').textContent = `${selDate.getFullYear()}年${selDate.getMonth() + 1}月${selDate.getDate()}日 ${WEEKDAY_NAMES[selWeekday - 1]}`;
+      
+      const todayTag = document.getElementById('bannerIsTodayTag');
+      if (isToday) {
+        todayTag.textContent = '今天';
+        todayTag.className = 'px-2 py-0.5 rounded-md text-[11px] font-semibold bg-emerald-400/25 text-emerald-50 border border-emerald-300/30';
+      } else {
+        todayTag.textContent = state.selectedDateYMD;
+        todayTag.className = 'px-2 py-0.5 rounded-md text-[11px] font-semibold bg-white/15 text-indigo-100';
+      }
+
+      const headline = document.getElementById('bannerHeadline');
+      const subtext = document.getElementById('bannerSubtext');
+
+      if (activeDayCourses.length > 0) {
+        const first = activeDayCourses[0];
+        headline.textContent = `${isToday ? '今日' : WEEKDAY_NAMES[selWeekday - 1]}有 ${activeDayCourses.length} 门固定排课：${first.title}（${first.startPeriod}-${first.endPeriod}节 @ ${first.location}）`;
+        subtext.textContent = `上课时间：${getPeriodTimeRange(first.startPeriod, first.endPeriod)} · 任课教师：${first.teacher}`;
+      } else {
+        // Find next upcoming class in this week
+        const upcomingThisWeek = activeWeekCourses.find(c => c.weekday > selWeekday);
+        if (upcomingThisWeek) {
+          headline.textContent = `${isToday ? '今日' : WEEKDAY_NAMES[selWeekday - 1]}无固定节次排课`;
+          subtext.textContent = `本周下一节课：${WEEKDAY_NAMES[upcomingThisWeek.weekday - 1]}（${upcomingThisWeek.startPeriod}-${upcomingThisWeek.endPeriod}节 ${getPeriodTimeRange(upcomingThisWeek.startPeriod, upcomingThisWeek.endPeriod)}）· ${upcomingThisWeek.title} @ ${upcomingThisWeek.location}`;
+        } else if (selWeek < 8) {
+          headline.textContent = `第 ${selWeek} 周暂无固定节次排课`;
+          subtext.textContent = `《专业外语理论》将于第 8 周（周三5-6节）及第 9 周（周一3-4节、周四1-2节）正式开课；本周有 ${activeOtherCourses.length} 门其他课程在修。`;
+        } else {
+          headline.textContent = `${isToday ? '今日' : WEEKDAY_NAMES[selWeekday - 1]}无固定节次排课`;
+          subtext.textContent = `第 ${selWeek} 周共有 ${activeWeekCourses.length} 次固定排课与 ${activeOtherCourses.length} 门其他课程。`;
+        }
+      }
+
+      const totalDayPeriods = activeDayCourses.reduce((acc, c) => acc + (c.endPeriod - c.startPeriod + 1), 0);
+      const totalWeekPeriods = activeWeekCourses.reduce((acc, c) => acc + (c.endPeriod - c.startPeriod + 1), 0);
+
+      document.getElementById('statDayCount').textContent = activeDayCourses.length > 0 ? `${activeDayCourses.length} 次 (${totalDayPeriods}节)` : '0 节';
+      document.getElementById('statWeekCount').textContent = activeWeekCourses.length > 0 ? `${activeWeekCourses.length} 次 (${totalWeekPeriods}节)` : '0 节';
+      document.getElementById('statOtherCount').textContent = `${activeOtherCourses.length} 门`;
+    }
+
+    function renderWeekdayStrip() {
+      const strip = document.getElementById('weekdayStrip');
+      const selDate = parseYMD(state.selectedDateYMD);
+      const selWeek = getWeekNumberForDate(state.selectedDateYMD);
+      const selWeekday = getWeekday1To7(selDate);
+      const todayYMD = formatDateYMD(new Date());
+      const allCourses = getAllFixedCourses();
+
+      const monDate = getDateForWeekAndDay(selWeek, 1);
+      const sunDate = getDateForWeekAndDay(selWeek, 7);
+      document.getElementById('weekRangeLabel').textContent = `(${formatDateYMD(monDate)} 至 ${formatDateYMD(sunDate)})`;
+
+      strip.innerHTML = '';
+      for (let d = 1; d <= 7; d++) {
+        const dayDate = getDateForWeekAndDay(selWeek, d);
+        const dayYMD = formatDateYMD(dayDate);
+        const isSelected = d === selWeekday;
+        const isToday = dayYMD === todayYMD;
+
+        const activeClasses = allCourses.filter(c => c.weekday === d && selWeek >= c.startWeek && selWeek <= c.endWeek);
+        const inactiveClasses = allCourses.filter(c => c.weekday === d && (selWeek < c.startWeek || selWeek > c.endWeek));
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `flex flex-col items-center justify-between p-2 sm:p-2.5 rounded-xl border text-center transition cursor-pointer ${
+          isSelected
+            ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs'
+            : isToday
+            ? 'bg-indigo-50/70 text-indigo-950 border-indigo-200 hover:bg-indigo-100/70'
+            : 'bg-slate-50/70 text-slate-700 border-slate-200/80 hover:bg-slate-100'
+        }`;
+
+        let badgeHtml = '';
+        if (activeClasses.length > 0) {
+          badgeHtml = `<span class="mt-1.5 inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-semibold ${
+            isSelected ? 'bg-white text-indigo-700' : 'bg-indigo-100 text-indigo-700'
+          }">${activeClasses.length}节课</span>`;
+        } else if (state.showNonCurrentWeek && inactiveClasses.length > 0) {
+          badgeHtml = `<span class="mt-1.5 inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-medium ${
+            isSelected ? 'bg-indigo-500 text-indigo-100' : 'bg-slate-200/80 text-slate-500'
+          }">非本周</span>`;
+        } else {
+          badgeHtml = `<span class="mt-1.5 inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] ${
+            isSelected ? 'text-indigo-200' : 'text-slate-400'
+          }">无课</span>`;
+        }
+
+        btn.innerHTML = `
+          <div class="flex items-center gap-1">
+            <span class="text-xs font-bold">${SHORT_WEEKDAY_NAMES[d - 1]}</span>
+            ${isToday ? `<span class="w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-emerald-300' : 'bg-indigo-600'}"></span>` : ''}
+          </div>
+          <span class="text-[11px] mt-0.5 ${isSelected ? 'text-indigo-100' : 'text-slate-500'}">${dayDate.getMonth() + 1}/${dayDate.getDate()}</span>
+          ${badgeHtml}
+        `;
+
+        btn.addEventListener('click', () => {
+          state.selectedDateYMD = dayYMD;
+          renderAll();
+        });
+        strip.appendChild(btn);
+      }
+    }
+
+    function renderDayView() {
+      const selDate = parseYMD(state.selectedDateYMD);
+      const selWeek = getWeekNumberForDate(state.selectedDateYMD);
+      const selWeekday = getWeekday1To7(selDate);
+      const allCourses = getAllFixedCourses();
+
+      document.getElementById('dayViewTitle').textContent = `${selDate.getMonth() + 1}月${selDate.getDate()}日 (${WEEKDAY_NAMES[selWeekday - 1]} · 第${selWeek}周) 课程安排`;
+      document.getElementById('sideWeekBadge').textContent = `第 ${selWeek} 周`;
+
+      const dayCourses = allCourses
+        .filter(c => c.weekday === selWeekday && ( (selWeek >= c.startWeek && selWeek <= c.endWeek) || state.showNonCurrentWeek ))
+        .sort((a, b) => a.startPeriod - b.startPeriod);
+
+      const container = document.getElementById('dayCoursesContainer');
+      container.innerHTML = '';
+
+      if (dayCourses.length === 0) {
+        // Find next class in current week
+        const activeWeekCourses = allCourses
+          .filter(c => selWeek >= c.startWeek && selWeek <= c.endWeek)
+          .sort((a, b) => a.weekday - b.weekday || a.startPeriod - b.startPeriod);
+        const nextCourse = activeWeekCourses.find(c => c.weekday > selWeekday) || activeWeekCourses[0];
+
+        container.innerHTML = `
+          <div class="rounded-2xl border border-dashed border-slate-200 bg-slate-50/60 p-8 text-center space-y-3">
+            <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+            </div>
+            <div>
+              <h4 class="text-sm font-bold text-slate-800">${WEEKDAY_NAMES[selWeekday - 1]}（第${selWeek}周）没有固定排课</h4>
+              <p class="text-xs text-slate-500 mt-1">您可以自由安排自习、实验或推进底部的其他课程。</p>
+            </div>
+            ${nextCourse ? `
+              <div class="pt-2">
+                <button type="button" id="jumpNextClassBtn" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold bg-white border border-slate-200 text-indigo-600 hover:bg-indigo-50 shadow-2xs transition">
+                  查看本周排课：${WEEKDAY_NAMES[nextCourse.weekday - 1]} ${nextCourse.startPeriod}-${nextCourse.endPeriod}节 《${nextCourse.title}》 →
+                </button>
+              </div>
+            ` : ''}
+          </div>
+        `;
+        const jumpBtn = document.getElementById('jumpNextClassBtn');
+        if (jumpBtn && nextCourse) {
+          jumpBtn.addEventListener('click', () => {
+            const targetDate = getDateForWeekAndDay(selWeek, nextCourse.weekday);
+            state.selectedDateYMD = formatDateYMD(targetDate);
+            renderAll();
+          });
+        }
+      } else {
+        dayCourses.forEach(course => {
+          const isActiveThisWeek = selWeek >= course.startWeek && selWeek <= course.endWeek;
+          const timeRange = getPeriodTimeRange(course.startPeriod, course.endPeriod);
+          const status = isActiveThisWeek
+            ? getCourseLiveStatus(course, state.selectedDateYMD)
+            : { label: `非本周 (${course.weeksText}上课)`, classes: 'bg-slate-200/80 text-slate-600' };
+          const savedNote = state.courseNotes[course.id] || '';
+
+          const card = document.createElement('div');
+          card.className = `course-card-transition rounded-2xl border p-4 cursor-pointer ${
+            isActiveThisWeek
+              ? 'bg-white border-indigo-200/90 shadow-xs hover:border-indigo-400'
+              : 'bg-slate-50/70 border-slate-200 border-dashed opacity-75 hover:opacity-100'
+          }`;
+
+          card.innerHTML = `
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-100">
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="px-2.5 py-1 rounded-lg text-xs font-bold ${
+                  isActiveThisWeek ? 'bg-indigo-600 text-white' : 'bg-slate-200 text-slate-700'
+                }">
+                  第 ${course.startPeriod}-${course.endPeriod} 节
+                </span>
+                <span class="text-xs font-semibold text-slate-700">${timeRange}</span>
+                <span class="px-2 py-0.5 rounded-md text-[11px] font-medium ${status.classes}">
+                  ${status.label}
+                </span>
+              </div>
+              <span class="text-xs font-medium text-slate-500">周次：${course.weeksText}</span>
+            </div>
+
+            <div class="mt-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div class="space-y-1">
+                <div class="flex items-center gap-2">
+                  <h4 class="text-base font-bold text-slate-900">${course.title}</h4>
+                  ${course.isCustom ? '<span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">自定义</span>' : ''}
+                </div>
+                <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-600">
+                  <span class="inline-flex items-center gap-1 font-medium text-slate-800">
+                    <svg class="w-3.5 h-3.5 text-indigo-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    ${course.campus ? course.campus + ' · ' : ''}${course.location}
+                  </span>
+                  <span class="inline-flex items-center gap-1">
+                    <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                    教师：${course.teacher || '未指定'}
+                  </span>
+                  ${course.credits ? `<span>学分：${course.credits}</span>` : ''}
+                </div>
+                ${savedNote ? `<div class="mt-2 text-xs bg-amber-50 text-amber-800 px-2.5 py-1.5 rounded-lg border border-amber-200/70">备注：${savedNote}</div>` : ''}
+              </div>
+              <div class="shrink-0">
+                <span class="inline-flex items-center gap-1 text-xs font-semibold text-indigo-600 hover:text-indigo-800">
+                  详情与备注
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                </span>
+              </div>
+            </div>
+          `;
+
+          card.addEventListener('click', () => openCourseDetailModal(course));
+          container.appendChild(card);
+        });
+      }
+
+      // Render Right Column: This Week's Fixed Classes Summary
+      const weekSummaryList = document.getElementById('weekSummaryList');
+      weekSummaryList.innerHTML = '';
+      const sortedAll = [...allCourses].sort((a, b) => a.weekday - b.weekday || a.startPeriod - b.startPeriod);
+
+      sortedAll.forEach(c => {
+        const isActive = selWeek >= c.startWeek && selWeek <= c.endWeek;
+        if (!isActive && !state.showNonCurrentWeek) return;
+        const item = document.createElement('div');
+        const isSelectedDay = c.weekday === selWeekday;
+        item.className = `p-3 rounded-xl border transition cursor-pointer ${
+          isActive
+            ? isSelectedDay
+              ? 'bg-indigo-50/70 border-indigo-300'
+              : 'bg-white border-slate-200 hover:border-indigo-300'
+            : 'bg-slate-50 border-slate-200 border-dashed opacity-70 hover:opacity-100'
+        }`;
+        item.innerHTML = `
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-xs font-bold ${isActive ? 'text-indigo-700' : 'text-slate-500'}">
+              ${WEEKDAY_NAMES[c.weekday - 1]} · ${c.startPeriod}-${c.endPeriod}节
+            </span>
+            <span class="text-[11px] px-1.5 py-0.5 rounded ${
+              isActive ? 'bg-emerald-50 text-emerald-700 font-semibold' : 'bg-slate-200 text-slate-600'
+            }">
+              ${isActive ? '本周上课' : `非本周 (${c.weeksText})`}
+            </span>
+          </div>
+          <div class="text-xs font-semibold text-slate-900 mt-1">${c.title}</div>
+          <div class="text-[11px] text-slate-500 mt-0.5 flex items-center justify-between">
+            <span>${c.campus ? c.campus + ' ' : ''}${c.location}</span>
+            <span>${getPeriodTimeRange(c.startPeriod, c.endPeriod)}</span>
+          </div>
+        `;
+        item.addEventListener('click', () => {
+          const targetDate = getDateForWeekAndDay(selWeek, c.weekday);
+          state.selectedDateYMD = formatDateYMD(targetDate);
+          renderAll();
+        });
+        weekSummaryList.appendChild(item);
+      });
+
+      // Render Other Courses in Day View
+      const otherList = document.getElementById('otherCoursesListDay');
+      otherList.innerHTML = '';
+      OTHER_COURSES.forEach(oc => {
+        const isActive = selWeek >= oc.startWeek && selWeek <= oc.endWeek;
+        const item = document.createElement('div');
+        item.className = `p-3 rounded-xl border cursor-pointer transition ${
+          isActive ? 'bg-amber-50/40 border-amber-200/80 hover:border-amber-300' : 'bg-slate-50 border-slate-200 opacity-65'
+        }`;
+        item.innerHTML = `
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-xs font-bold text-slate-900">${oc.title}</span>
+            <span class="text-[10px] px-1.5 py-0.5 rounded font-semibold ${
+              isActive ? 'bg-amber-100 text-amber-800' : 'bg-slate-200 text-slate-600'
+            }">${isActive ? '进行中' : '已结课'}</span>
+          </div>
+          <div class="text-[11px] text-slate-600 mt-1">
+            教师：${oc.teacher} · 周次：${oc.weeksText}
+          </div>
+        `;
+        item.addEventListener('click', () => openCourseDetailModal(oc));
+        otherList.appendChild(item);
+      });
+    }
+
+    function renderWeekGridView() {
+      const selDate = parseYMD(state.selectedDateYMD);
+      const selWeek = getWeekNumberForDate(state.selectedDateYMD);
+      const selWeekday = getWeekday1To7(selDate);
+      const todayYMD = formatDateYMD(new Date());
+      const allCourses = getAllFixedCourses();
+
+      document.getElementById('gridWeekStatusBadge').textContent = `当前展示：第 ${selWeek} 周`;
+
+      // Header Row
+      const headerRow = document.getElementById('weekGridHeaderRow');
+      let headerHtml = `
+        <th class="py-3 px-2.5 w-14 text-center border-r border-slate-200">时间段</th>
+        <th class="py-3 px-2.5 w-20 text-center border-r border-slate-200">节次/时间</th>
+      `;
+      for (let d = 1; d <= 7; d++) {
+        const dayDate = getDateForWeekAndDay(selWeek, d);
+        const dayYMD = formatDateYMD(dayDate);
+        const isToday = dayYMD === todayYMD;
+        const isSelected = d === selWeekday;
+        headerHtml += `
+          <th data-weekday="${d}" class="py-2.5 px-2 text-center border-r border-slate-200 last:border-r-0 cursor-pointer transition ${
+            isSelected ? 'bg-indigo-50/90 text-indigo-700' : isToday ? 'bg-emerald-50/60 text-emerald-800' : 'hover:bg-slate-100/70'
+          }">
+            <div class="font-bold text-xs">${WEEKDAY_NAMES[d - 1]}</div>
+            <div class="text-[11px] font-normal ${isSelected ? 'text-indigo-600 font-medium' : 'text-slate-400'}">
+              ${dayDate.getMonth() + 1}月${dayDate.getDate()}日 ${isToday ? '(今天)' : ''}
+            </div>
+          </th>
+        `;
+      }
+      headerRow.innerHTML = headerHtml;
+
+      headerRow.querySelectorAll('th[data-weekday]').forEach(th => {
+        th.addEventListener('click', () => {
+          const d = Number(th.getAttribute('data-weekday'));
+          state.selectedDateYMD = formatDateYMD(getDateForWeekAndDay(selWeek, d));
+          renderAll();
+        });
+      });
+
+      // Build occupancy map for rowspan cells
+      const skipCell = {}; // key: `${period}-${weekday}`
+      const courseAtStart = {}; // key: `${period}-${weekday}` -> course
+
+      allCourses.forEach(c => {
+        const isActive = selWeek >= c.startWeek && selWeek <= c.endWeek;
+        if (!isActive && !state.showNonCurrentWeek) return;
+        const key = `${c.startPeriod}-${c.weekday}`;
+        // Prefer active course if multiple overlap
+        if (!courseAtStart[key] || isActive) {
+          courseAtStart[key] = c;
+          for (let p = c.startPeriod + 1; p <= c.endPeriod; p++) {
+            skipCell[`${p}-${c.weekday}`] = true;
+          }
+        }
+      });
+
+      const tbody = document.getElementById('weekGridBody');
+      tbody.innerHTML = '';
+
+      for (let p = 1; p <= 10; p++) {
+        const pInfo = state.periodTimes.find(item => item.period === p) || DEFAULT_PERIOD_TIMES[p - 1];
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-50/50 transition';
+
+        let rowHtml = '';
+        // Group column (上午 1-4, 下午 5-8, 晚上 9-10)
+        if (p === 1) {
+          rowHtml += `<td rowspan="4" class="py-2 px-2 text-center font-bold text-slate-600 bg-slate-50/70 border-r border-slate-200">上午</td>`;
+        } else if (p === 5) {
+          rowHtml += `<td rowspan="4" class="py-2 px-2 text-center font-bold text-slate-600 bg-slate-50/70 border-r border-slate-200">下午</td>`;
+        } else if (p === 9) {
+          rowHtml += `<td rowspan="2" class="py-2 px-2 text-center font-bold text-slate-600 bg-slate-50/70 border-r border-slate-200">晚上</td>`;
+        }
+
+        // Period number & time column
+        rowHtml += `
+          <td class="py-2.5 px-2 text-center border-r border-slate-200 bg-slate-50/30">
+            <div class="font-bold text-slate-800">${p}</div>
+            <div class="text-[10px] text-slate-400 leading-tight mt-0.5">${pInfo.start}<br>${pInfo.end}</div>
+          </td>
+        `;
+
+        for (let d = 1; d <= 7; d++) {
+          if (skipCell[`${p}-${d}`]) continue;
+
+          const c = courseAtStart[`${p}-${d}`];
+          const isSelectedCol = d === selWeekday;
+
+          if (c) {
+            const span = Math.max(1, c.endPeriod - c.startPeriod + 1);
+            const isActive = selWeek >= c.startWeek && selWeek <= c.endWeek;
+            rowHtml += `
+              <td rowspan="${span}" class="p-1.5 align-top border-r border-slate-200 last:border-r-0 ${isSelectedCol ? 'bg-indigo-50/30' : ''}">
+                <div data-course-id="${c.id}" class="h-full rounded-xl p-2.5 cursor-pointer transition flex flex-col justify-between ${
+                  isActive
+                    ? 'bg-indigo-600 text-white shadow-xs hover:bg-indigo-700'
+                    : 'bg-slate-100 text-slate-600 border border-dashed border-slate-300 hover:bg-slate-200/70'
+                }">
+                  <div class="space-y-1">
+                    <div class="flex items-center justify-between gap-1">
+                      <span class="text-[10px] font-bold px-1.5 py-0.5 rounded ${
+                        isActive ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-700'
+                      }">
+                        ${isActive ? '本周上课' : `非本周·${c.weeksText}`}
+                      </span>
+                      <span class="text-[10px] ${isActive ? 'text-indigo-100' : 'text-slate-400'}">${c.startPeriod}-${c.endPeriod}节</span>
+                    </div>
+                    <div class="font-bold text-xs leading-snug mt-1">${c.title}</div>
+                    <div class="text-[11px] ${isActive ? 'text-indigo-100' : 'text-slate-500'} font-medium">
+                      📍 ${c.campus ? c.campus + ' ' : ''}${c.location}
+                    </div>
+                  </div>
+                  <div class="pt-2 mt-2 border-t ${isActive ? 'border-white/15 text-indigo-100' : 'border-slate-200 text-slate-500'} text-[10px] space-y-0.5">
+                    <div class="truncate">👤 ${c.teacher || '未指定'}</div>
+                    <div>🗓 ${c.weeksText}</div>
+                  </div>
+                </div>
+              </td>
+            `;
+          } else {
+            rowHtml += `<td class="p-1.5 border-r border-slate-200 last:border-r-0 h-14 ${isSelectedCol ? 'bg-indigo-50/20' : ''}"></td>`;
+          }
+        }
+
+        tr.innerHTML = rowHtml;
+        tbody.appendChild(tr);
+      }
+
+      // Bind clicks on course cards inside table
+      tbody.querySelectorAll('[data-course-id]').forEach(el => {
+        el.addEventListener('click', () => {
+          const cid = el.getAttribute('data-course-id');
+          const found = allCourses.find(item => item.id === cid);
+          if (found) openCourseDetailModal(found);
+        });
+      });
+
+      // Footer Other Courses
+      const footerOther = document.getElementById('gridFooterOtherCourses');
+      footerOther.innerHTML = '<span class="font-bold text-slate-700">其他课程：</span>';
+      OTHER_COURSES.forEach(oc => {
+        const isActive = selWeek >= oc.startWeek && selWeek <= oc.endWeek;
+        const badge = document.createElement('button');
+        badge.type = 'button';
+        badge.className = `inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-xs transition ${
+          isActive
+            ? 'bg-amber-50 border-amber-200 text-amber-900 font-medium hover:bg-amber-100'
+            : 'bg-slate-100 border-slate-200 text-slate-500 hover:bg-slate-200'
+        }`;
+        badge.innerHTML = `
+          <span>${oc.title} (${oc.teacher}) · ${oc.weeksText}</span>
+          <span class="px-1.5 py-0.2 rounded text-[10px] ${isActive ? 'bg-amber-200/70 text-amber-900' : 'bg-slate-200 text-slate-600'}">
+            ${isActive ? '本周在修' : '已结课'}
+          </span>
+        `;
+        badge.addEventListener('click', () => openCourseDetailModal(oc));
+        footerOther.appendChild(badge);
+      });
+    }
+
+    function renderAllCoursesView() {
+      const selWeek = getWeekNumberForDate(state.selectedDateYMD);
+      const grid = document.getElementById('allCoursesGrid');
+      grid.innerHTML = '';
+
+      const allFixed = getAllFixedCourses();
+      allFixed.forEach(c => {
+        const isActive = selWeek >= c.startWeek && selWeek <= c.endWeek;
+        const card = document.createElement('div');
+        card.className = 'rounded-2xl border border-slate-200 p-4 hover:border-indigo-300 transition cursor-pointer bg-white space-y-2.5';
+        card.innerHTML = `
+          <div class="flex items-start justify-between gap-2">
+            <div>
+              <span class="inline-block px-2 py-0.5 rounded text-[10px] font-semibold ${
+                isActive ? 'bg-indigo-50 text-indigo-700' : 'bg-slate-100 text-slate-600'
+              }">
+                ${WEEKDAY_NAMES[c.weekday - 1]} ${c.startPeriod}-${c.endPeriod}节 (${getPeriodTimeRange(c.startPeriod, c.endPeriod)})
+              </span>
+              <h4 class="text-base font-bold text-slate-900 mt-1">${c.title}</h4>
+            </div>
+            <span class="px-2 py-0.5 rounded-full text-xs font-semibold ${
+              isActive ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-500'
+            }">
+              ${c.weeksText}
+            </span>
+          </div>
+          <div class="grid grid-cols-2 gap-2 text-xs text-slate-600 bg-slate-50 p-3 rounded-xl">
+            <div><span class="text-slate-400">场地：</span>${c.campus ? c.campus + ' ' : ''}${c.location}</div>
+            <div><span class="text-slate-400">教师：</span>${c.teacher || '未指定'}</div>
+            <div><span class="text-slate-400">教学班：</span>${c.classCode || '自定义'}</div>
+            <div><span class="text-slate-400">学分/考核：</span>${c.credits || '-'} 学分 / ${c.assessment || '-'}</div>
+          </div>
+        `;
+        card.addEventListener('click', () => openCourseDetailModal(c));
+        grid.appendChild(card);
+      });
+
+      OTHER_COURSES.forEach(oc => {
+        const isActive = selWeek >= oc.startWeek && oc.endWeek >= selWeek;
+        const card = document.createElement('div');
+        card.className = 'rounded-2xl border border-amber-200/80 p-4 hover:border-amber-400 transition cursor-pointer bg-amber-50/20 space-y-2.5';
+        card.innerHTML = `
+          <div class="flex items-start justify-between gap-2">
+            <div>
+              <span class="inline-block px-2 py-0.5 rounded text-[10px] font-semibold bg-amber-100 text-amber-800">
+                其他课程（无固定节次）
+              </span>
+              <h4 class="text-base font-bold text-slate-900 mt-1">${oc.title}</h4>
+            </div>
+            <span class="px-2 py-0.5 rounded-full text-xs font-semibold ${
+              isActive ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-500'
+            }">
+              ${oc.weeksText}
+            </span>
+          </div>
+          <div class="grid grid-cols-2 gap-2 text-xs text-slate-600 bg-white p-3 rounded-xl border border-amber-100">
+            <div><span class="text-slate-400">任课教师：</span>${oc.teacher}</div>
+            <div><span class="text-slate-400">场地安排：</span>无固定场地</div>
+          </div>
+        `;
+        card.addEventListener('click', () => openCourseDetailModal(oc));
+        grid.appendChild(card);
+      });
+    }
+
+    // ==========================================
+    // 4. MODALS & INTERACTIONS
+    // ==========================================
+    function openCourseDetailModal(course) {
+      state.activeModalCourseId = course.id;
+      const modal = document.getElementById('courseDetailModal');
+      document.getElementById('modalCourseTag').textContent = course.weekday
+        ? `${WEEKDAY_NAMES[course.weekday - 1]} · 第${course.startPeriod}-${course.endPeriod}节`
+        : '其他课程（无固定节次）';
+      document.getElementById('modalCourseTitle').textContent = course.title;
+
+      const metaGrid = document.getElementById('modalCourseMetaGrid');
+      if (course.weekday) {
+        metaGrid.innerHTML = `
+          <div><div class="text-[11px] text-slate-400">上课时间</div><div class="font-semibold text-slate-800 mt-0.5">${WEEKDAY_NAMES[course.weekday - 1]} ${course.startPeriod}-${course.endPeriod}节 (${getPeriodTimeRange(course.startPeriod, course.endPeriod)})</div></div>
+          <div><div class="text-[11px] text-slate-400">上课周次</div><div class="font-semibold text-slate-800 mt-0.5">${course.weeksText}</div></div>
+          <div><div class="text-[11px] text-slate-400">校区与场地</div><div class="font-semibold text-slate-800 mt-0.5">${course.campus ? course.campus + ' · ' : ''}${course.location}</div></div>
+          <div><div class="text-[11px] text-slate-400">任课教师</div><div class="font-semibold text-slate-800 mt-0.5">${course.teacher || '未指定'}</div></div>
+          <div><div class="text-[11px] text-slate-400">教学班号</div><div class="font-semibold text-slate-800 mt-0.5">${course.classCode || '自定义日程'}</div></div>
+          <div><div class="text-[11px] text-slate-400">学分 / 考核方式</div><div class="font-semibold text-slate-800 mt-0.5">${course.credits || '-'} 学分 / ${course.assessment || '-'}</div></div>
+        `;
+      } else {
+        metaGrid.innerHTML = `
+          <div><div class="text-[11px] text-slate-400">课程性质</div><div class="font-semibold text-slate-800 mt-0.5">${course.category}</div></div>
+          <div><div class="text-[11px] text-slate-400">上课周次</div><div class="font-semibold text-slate-800 mt-0.5">${course.weeksText}</div></div>
+          <div><div class="text-[11px] text-slate-400">任课教师</div><div class="font-semibold text-slate-800 mt-0.5">${course.teacher}</div></div>
+          <div><div class="text-[11px] text-slate-400">场地</div><div class="font-semibold text-slate-800 mt-0.5">${course.location}</div></div>
+        `;
+      }
+
+      const fullDesc = document.getElementById('modalCourseFullDesc');
+      fullDesc.innerHTML = `
+        <div><strong>教学班组成：</strong>${course.classGroup || '电子信息工程(专升本)2025(1)班; 电子信息工程(专升本)2025(2)班'}</div>
+        <div><strong>学时详情：</strong>${course.hoursBreakdown || '按教学计划执行'}</div>
+      `;
+
+      document.getElementById('modalCourseNoteInput').value = state.courseNotes[course.id] || '';
+      document.getElementById('noteSavedToast').classList.add('opacity-0');
+
+      const delBtn = document.getElementById('deleteCustomCourseBtn');
+      if (course.isCustom) {
+        delBtn.classList.remove('hidden');
+      } else {
+        delBtn.classList.add('hidden');
+      }
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeCourseDetailModal() {
+      const modal = document.getElementById('courseDetailModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      state.activeModalCourseId = null;
+    }
+
+    function openSettingsModal() {
+      document.getElementById('semesterStartInput').value = state.semesterStartMonday;
+      const grid = document.getElementById('periodTimesEditorGrid');
+      grid.innerHTML = '';
+      state.periodTimes.forEach((pt, idx) => {
+        const div = document.createElement('div');
+        div.className = 'flex items-center justify-between gap-2 bg-slate-50 p-2 rounded-lg border border-slate-200';
+        div.innerHTML = `
+          <span class="font-semibold text-slate-700">第 ${pt.period} 节 (${pt.group})</span>
+          <div class="flex items-center gap-1">
+            <input type="time" data-period-idx="${idx}" data-field="start" value="${pt.start}" class="rounded border border-slate-200 px-1.5 py-0.5 text-xs bg-white" />
+            <span>-</span>
+            <input type="time" data-period-idx="${idx}" data-field="end" value="${pt.end}" class="rounded border border-slate-200 px-1.5 py-0.5 text-xs bg-white" />
+          </div>
+        `;
+        grid.appendChild(div);
+      });
+      const modal = document.getElementById('settingsModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeSettingsModal() {
+      const modal = document.getElementById('settingsModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function renderAll() {
+      document.getElementById('datePickerInput').value = state.selectedDateYMD;
+      populateWeekSelect();
+      renderViewTabs();
+      renderTopBannerAndStats();
+      renderWeekdayStrip();
+      renderDayView();
+      renderWeekGridView();
+      renderAllCoursesView();
+    }
+
+    // ==========================================
+    // 5. EVENT LISTENERS & INITIALIZATION
+    // ==========================================
+    window.addEventListener('DOMContentLoaded', () => {
+      updateLiveClock();
+      setInterval(updateLiveClock, 1000);
+
+      // View Tabs
+      document.getElementById('tabDayView').addEventListener('click', () => {
+        state.viewMode = 'day';
+        renderAll();
+      });
+      document.getElementById('tabWeekView').addEventListener('click', () => {
+        state.viewMode = 'week';
+        renderAll();
+      });
+      document.getElementById('tabAllCourses').addEventListener('click', () => {
+        state.viewMode = 'all';
+        renderAll();
+      });
+
+      // Week Stepper & Select
+      document.getElementById('prevWeekBtn').addEventListener('click', () => {
+        const curWeek = getWeekNumberForDate(state.selectedDateYMD);
+        const curWeekday = getWeekday1To7(parseYMD(state.selectedDateYMD));
+        const targetWeek = Math.max(1, curWeek - 1);
+        state.selectedDateYMD = formatDateYMD(getDateForWeekAndDay(targetWeek, curWeekday));
+        renderAll();
+      });
+
+      document.getElementById('nextWeekBtn').addEventListener('click', () => {
+        const curWeek = getWeekNumberForDate(state.selectedDateYMD);
+        const curWeekday = getWeekday1To7(parseYMD(state.selectedDateYMD));
+        const targetWeek = Math.min(20, curWeek + 1);
+        state.selectedDateYMD = formatDateYMD(getDateForWeekAndDay(targetWeek, curWeekday));
+        renderAll();
+      });
+
+      document.getElementById('weekSelect').addEventListener('change', (e) => {
+        const targetWeek = Number(e.target.value);
+        const curWeekday = getWeekday1To7(parseYMD(state.selectedDateYMD));
+        state.selectedDateYMD = formatDateYMD(getDateForWeekAndDay(targetWeek, curWeekday));
+        renderAll();
+      });
+
+      // Date Picker & Today Button
+      document.getElementById('datePickerInput').addEventListener('change', (e) => {
+        if (e.target.value) {
+          state.selectedDateYMD = e.target.value;
+          renderAll();
+        }
+      });
+
+      document.getElementById('jumpTodayBtn').addEventListener('click', () => {
+        state.selectedDateYMD = formatDateYMD(new Date());
+        renderAll();
+      });
+
+      // Non-current week toggle
+      document.getElementById('showNonCurrentToggle').addEventListener('change', (e) => {
+        state.showNonCurrentWeek = e.target.checked;
+        renderAll();
+      });
+
+      // Course Detail Modal events
+      document.getElementById('closeDetailModalBtn').addEventListener('click', closeCourseDetailModal);
+      document.getElementById('saveCourseNoteBtn').addEventListener('click', () => {
+        if (!state.activeModalCourseId) return;
+        const val = document.getElementById('modalCourseNoteInput').value.trim();
+        state.courseNotes[state.activeModalCourseId] = val;
+        safeSetStorage('schedule_course_notes', state.courseNotes);
+        const toast = document.getElementById('noteSavedToast');
+        toast.classList.remove('opacity-0');
+        renderAll();
+      });
+
+      document.getElementById('deleteCustomCourseBtn').addEventListener('click', () => {
+        if (!state.activeModalCourseId) return;
+        state.customCourses = state.customCourses.filter(c => c.id !== state.activeModalCourseId);
+        safeSetStorage('schedule_custom_courses', state.customCourses);
+        closeCourseDetailModal();
+        renderAll();
+      });
+
+      // Settings Modal events
+      document.getElementById('openSettingsBtnMobile').addEventListener('click', openSettingsModal);
+      document.getElementById('openSettingsBtnDesktop').addEventListener('click', openSettingsModal);
+      document.getElementById('closeSettingsModalBtn').addEventListener('click', closeSettingsModal);
+
+      document.getElementById('presetAug31Btn').addEventListener('click', () => {
+        document.getElementById('semesterStartInput').value = '2026-08-31';
+      });
+      document.getElementById('presetSep07Btn').addEventListener('click', () => {
+        document.getElementById('semesterStartInput').value = '2026-09-07';
+      });
+
+      document.getElementById('resetPeriodTimesBtn').addEventListener('click', () => {
+        state.periodTimes = JSON.parse(JSON.stringify(DEFAULT_PERIOD_TIMES));
+        openSettingsModal();
+      });
+
+      document.getElementById('saveSettingsBtn').addEventListener('click', () => {
+        const startVal = document.getElementById('semesterStartInput').value;
+        if (startVal) {
+          state.semesterStartMonday = formatDateYMD(getMondayOfDate(parseYMD(startVal)));
+          safeSetStorage('schedule_semester_start', state.semesterStartMonday);
+        }
+        const inputs = document.querySelectorAll('#periodTimesEditorGrid input[data-period-idx]');
+        inputs.forEach(inp => {
+          const idx = Number(inp.getAttribute('data-period-idx'));
+          const field = inp.getAttribute('data-field');
+          if (state.periodTimes[idx] && inp.value) {
+            state.periodTimes[idx][field] = inp.value;
+          }
+        });
+        safeSetStorage('schedule_period_times', state.periodTimes);
+        closeSettingsModal();
+        renderAll();
+      });
+
+      // Add Custom Course Modal events
+      const openAddCustom = () => {
+        const selWeekday = getWeekday1To7(parseYMD(state.selectedDateYMD));
+        document.getElementById('customWeekday').value = String(selWeekday);
+        const modal = document.getElementById('addCustomModal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      };
+      const closeAddCustom = () => {
+        const modal = document.getElementById('addCustomModal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      };
+
+      document.getElementById('openAddCustomBtnDay').addEventListener('click', openAddCustom);
+      document.getElementById('openAddCustomBtnAll').addEventListener('click', openAddCustom);
+      document.getElementById('closeAddCustomModalBtn').addEventListener('click', closeAddCustom);
+      document.getElementById('cancelAddCustomBtn').addEventListener('click', closeAddCustom);
+
+      document.getElementById('addCustomForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const title = document.getElementById('customTitle').value.trim();
+        if (!title) return;
+        const weekday = Number(document.getElementById('customWeekday').value);
+        const startPeriod = Number(document.getElementById('customStartPeriod').value);
+        const endPeriod = Math.max(startPeriod, Number(document.getElementById('customEndPeriod').value));
+        const startWeek = Number(document.getElementById('customStartWeek').value) || 1;
+        const endWeek = Math.max(startWeek, Number(document.getElementById('customEndWeek').value) || 20);
+        const location = document.getElementById('customLocation').value.trim() || '待定';
+        const teacher = document.getElementById('customTeacher').value.trim() || '自定';
+
+        const newCourse = {
+          id: 'custom-' + Date.now(),
+          title,
+          weekday,
+          startPeriod,
+          endPeriod,
+          startWeek,
+          endWeek,
+          weeksText: `${startWeek}-${endWeek}周`,
+          campus: '',
+          location,
+          teacher,
+          classCode: '自定义日程',
+          classGroup: '个人添加',
+          assessment: '-',
+          hoursBreakdown: '自定义学时',
+          credits: '-',
+          isCustom: true
+        };
+        state.customCourses.push(newCourse);
+        safeSetStorage('schedule_custom_courses', state.customCourses);
+        document.getElementById('addCustomForm').reset();
+        closeAddCustom();
+        renderAll();
+      });
+
+      // Close modals on backdrop click
+      ['courseDetailModal', 'settingsModal', 'addCustomModal'].forEach(mid => {
+        const modalEl = document.getElementById(mid);
+        modalEl.addEventListener('click', (e) => {
+          if (e.target === modalEl) {
+            modalEl.classList.add('hidden');
+            modalEl.classList.remove('flex');
+          }
+        });
+      });
+
+      renderAll();
+    });
+  </script>
+</body>
+</html>
